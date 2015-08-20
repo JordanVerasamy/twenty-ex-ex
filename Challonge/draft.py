@@ -76,3 +76,11 @@ for placing in player_placings:
 
 for drafter in drafter_points_totals:
 	print '{} earned {} points'.format(drafter, drafter_points_totals[drafter])
+
+
+
+
+
+
+
+  
