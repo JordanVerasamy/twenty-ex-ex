@@ -1,3 +1,6 @@
+import json
+import pprint
+
 points_by_placing = {1 : 400,
                      2 : 380,
                      3 : 360,
@@ -60,24 +63,33 @@ def get_dict_key(dict, value):
 	for key in dict:
 		if value in dict[key]:
 			return key
-	#print "Value not found."
+	#print 'Value not found.'
 	return None
 
-drafter_points_totals = {}
+# def get_points_from_placings():
+# 	drafter_points_totals = {}
 
-for placing in player_placings:
-	for player in player_placings[placing]:
-		drafter = get_dict_key(drafted_teams, player)
-		if drafter == None:
-			continue
-		if drafter not in drafter_points_totals:
-			drafter_points_totals[drafter] = 0
-		drafter_points_totals[drafter] += points_by_placing[get_dict_key(player_placings, player)]
+# 	for placing in player_placings:
+# 		for player in player_placings[placing]:
+# 			drafter = get_dict_key(drafted_teams, player)
+# 			if drafter == None:
+# 				continue
+# 			if drafter not in drafter_points_totals:
+# 				drafter_points_totals[drafter] = 0
+# 			drafter_points_totals[drafter] += points_by_placing[get_dict_key(player_placings, player)]
 
-for drafter in drafter_points_totals:
-	print '{} earned {} points'.format(drafter, drafter_points_totals[drafter])
+# 	for drafter in drafter_points_totals:
+# 		print '{} earned {} points'.format(drafter, drafter_points_totals[drafter])
+
+def get_points_from_file(input_file):
+	with open(input_file) as in_file:
+	    participant_data = json.load(in_file)
+	
+	for name in participant_data:
+		print '{} can place, at worst, {}.'.format(name, participant_data[name]['worst_possible_round'])
 
 
+get_points_from_file('participant_data.txt')
 
 
 
