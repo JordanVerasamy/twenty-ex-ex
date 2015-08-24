@@ -17,6 +17,8 @@ points_by_placing = {1 : 400,
                     97 : 140,
                    129 : 120}
 
+round_to_placing = {}
+
 drafted_teams = {'Life' : ['PPMD', 
                        	   'Shroomed', 
                            'Darkrain'],
