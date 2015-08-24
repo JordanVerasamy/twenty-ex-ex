@@ -42,7 +42,11 @@ def download_data(username, tournament_url, api_key, output_file):
 		participant_data[winner]['wins'] += 1
 		participant_data[loser]['losses'] += 1
 
-		#need some way to compute the worst possible round...
+		# need some way to compute the worst possible round... this is a hack
+		# that lets me test the other functionality in the meantime
+		participant_data[winner]['worst_possible_round'] = condensed_match['round']
+		participant_data[loser]['worst_possible_round'] = condensed_match['round']
+		# DELETE THIS EVENTUALLY
 
 		if participant_data[loser]['losses'] == 2:
 			participant_data[loser]['final_round'] = condensed_match['round']

@@ -83,11 +83,13 @@ def get_dict_key(dict, value):
 
 def get_points_from_file(input_file):
 	with open(input_file) as in_file:
-	    participant_data = json.load(in_file)
+		participant_data = json.load(in_file)
 	
 	for name in participant_data:
-		print '{} can place, at worst, {}.'.format(name, participant_data[name]['worst_possible_round'])
+		round = participant_data[name]['worst_possible_round']
+		print '{} can place, at worst, {}.'.format(name, round)
 
+		
 
 get_points_from_file('participant_data.txt')
 
