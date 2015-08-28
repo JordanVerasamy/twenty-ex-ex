@@ -17,7 +17,10 @@ class CondensedMatch:
 		return not self.__eq__(other)
 
 	def __str__(self):
-		return 'W: {:16} L: {:16} R: {:3}'.format(self.winner, self.loser, self.round)
+		bracket = 'loser\'s'
+		if self.round > 0:
+			bracket = 'winner\'s'
+		return '{} defeated {} in {} round {}'.format(self.winner, self.loser, bracket, abs(self.round))
 
 class TournamentTracker:
 
