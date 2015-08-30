@@ -11,4 +11,4 @@ Each player will be able to enter their drafted team, and a script will update a
 2. Provide live updates on tournaments in Slack.
 ------------------------------------------------
 
-During UW Smash Club weeklies, those of us who aren't attending might want to keep track of how their friends are doing in the tournament, without having to constantly refresh the Challonge page. This tool will use [Slack incoming webhooks](https://api.slack.com/incoming-webhooks) to post updates about your friends' results weeklies as soon as they happen, so you'll never be out of the loop. Eventually, it could be extended to work for pro tournaments as well
+During UW Smash Club weeklies, those of us who aren't attending might want to keep track of how their friends are doing in the tournament, without having to constantly refresh the Challonge page. This tool will use [Slack incoming webhooks](https://api.slack.com/incoming-webhooks) to post updates about your friends' results weeklies as soon as they happen, so you'll never be out of the loop. Eventually, it could be extended to work for pro tournaments as well.
