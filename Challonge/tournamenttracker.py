@@ -37,6 +37,9 @@ class TournamentTracker:
 
 	def pull_matches(self): # updates condensed_matches list, returns the new ones
 
+		if self.tournament_url == '':
+			return []
+
 		tournament = challonge.tournaments.show(self.tournament_url)
 		match_list = challonge.matches.index(tournament['id'])
 		participant_list = challonge.participants.index(tournament['id'])
