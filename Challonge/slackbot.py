@@ -6,8 +6,12 @@ from slackclient import SlackClient
 
 username = config.challonge_username
 tournament_url = config.tournament_url
+
 challonge_api_key = config.challonge_api_key
 slack_api_token = config.slack_api_token
+
+channel_name = config.channel_to_connect_to
+channel_id = config.channels[channel_name]
 
 tournament_tracker = TournamentTracker(username, tournament_url, challonge_api_key)
 slack_client = SlackClient(slack_api_token)
@@ -18,16 +22,18 @@ if slack_client.rtm_connect():
 		new_matches = tournament_tracker.pull_matches()
 
 		for message in new_messages:
+			print message
 			if 'text' in message:
-				if message['text'] == 'pls 20xx me' and message['channel'] == 'C051SG90S':
-					slack_client.rtm_send_message('C051SG90S', 'you have been 20xx\'d')
+				if message['text'] == 'pls 20xx me' and message['channel'] == channel_id:
+					slack_client.rtm_send_message(channel_id, 'you have been 20xx\'d')
 
 		if new_matches:
 			update_message = '```'
 			for condensed_match in new_matches:
 				update_message = update_message + str(condensed_match) + '\n'
 			update_message = update_message + '```'
-			slack_client.rtm_send_message('C051SG90S', update_message)
+			slack_client.rtm_send_message(channel_id, update_message)
+			print 'Sent updates to #{}!'.format(channel_name)
 		else:
 			print 'No new matches.'
 
