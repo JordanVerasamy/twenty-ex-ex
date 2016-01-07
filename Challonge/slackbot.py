@@ -20,8 +20,7 @@ slack_client = SlackClient(slack_api_token)
 
 def info_command(args):
 	output_message = 'Here\'s a list of all the tournaments you\'re following right now:\n```'
-	for tournament_tracker in tournament_trackers:
-		output_message = output_message + '{}\n'.format(tournament_tracker.tournament_url)
+	output_message += '\n'.join('{}'.format(tt.tournament_url) for tt in tournament_trackers)
 	return output_message + '```'
 
 def follow_command(args):
@@ -41,7 +40,7 @@ commands = {'info' : info_command,
 def execute_command(command, args):
 	if command == 'help':
 		output_message = 'Here\'s a list of available commands:\n```!20xx help\n'
-		for c in commands: output_message = output_message + '!20xx {}\n'.format(c)
+		output_message += '\n'.join('!20xx {}'.format(c) for c in commands)
 		output_message = output_message + '```'
 
 	elif command in commands:
