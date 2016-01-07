@@ -16,29 +16,36 @@ channel_id = config.channels[channel_name]
 tournament_trackers = []
 slack_client = SlackClient(slack_api_token)
 
-def follow_tournament(tournament_url):
-	tournament_trackers.append(TournamentTracker(username, tournament_url, challonge_api_key))
+### ----- COMMANDS RECOGNIZED BY SLACKBOT ----- ###
 
-#def unfollow_tournament(tournament_url):
-	#not implemented yet
+def info_command(args):
+	output_message = 'Here\'s a list of all the tournaments you\'re following right now:\n```'
+	for tournament_tracker in tournament_trackers:
+		output_message = output_message + '{}\n'.format(tournament_tracker.tournament_url)
+	return output_message + '```'
+
+def follow_command(args):
+	tournament_trackers.append(TournamentTracker(username, args[0], challonge_api_key))
+	return 'Started following `{}`!'.format(args[0])
+
+def unfollow_command(args):
+	#Not implemented!
+	return 'No longer following `{}`'.format(args[0])
+
+commands = {'info' : info_command,
+            'follow' : follow_command,
+            'unfollow' : unfollow_command}
+
+### ------------------------------------------- ###
 
 def execute_command(command, args):
 	if command == 'help':
-		output_message = 'Here\'s a list of available commands:\n```{}\n{}\n{}\n{}```'.format('!20xx help',
-		                                                                                      '!20xx info',
-																							  '!20xx follow',
-																							  '!20xx unfollow')
-	elif command == 'info':
-		output_message = 'Here\'s a list of all the tournaments you\'re following right now:\n```'
-		for tournament_tracker in tournament_trackers:
-			output_message = output_message + '{}\n'.format(tournament_tracker.tournament_url)
+		output_message = 'Here\'s a list of available commands:\n```!20xx help\n'
+		for c in commands: output_message = output_message + '!20xx {}\n'.format(c)
 		output_message = output_message + '```'
-	elif command == 'follow':
-		follow_tournament(args[0])
-		output_message = 'Started following `{}`!'.format(args[0])
-	elif command == 'unfollow':
-		#unfollow_tournament(args[0])
-		output_message = 'No longer following `{}`'.format(args[0])
+
+	elif command in commands:
+		output_message = commands[command](args)
 	else:
 		output_message = 'Couldn\'t recognize your command. Enter `!20xx help` for more info.'
 
@@ -49,6 +56,8 @@ def create_update_message(message_list, tournament_url):
 	for condensed_match in new_matches:
 		update_message = update_message + str(condensed_match) + '\n'
 	return update_message + '```'
+
+### ------------------------------------------- ###
 
 if slack_client.rtm_connect():
 	while True:
@@ -64,9 +73,10 @@ if slack_client.rtm_connect():
 		for tournament_tracker in tournament_trackers:
 			new_matches = tournament_tracker.pull_matches()
 			if new_matches:
-				slack_client.rtm_send_message(channel_id, create_update_message(new_matches, tournament_tracker.tournament_url))
+				update_message = create_update_message(new_matches, tournament_tracker.tournament_url)
+				slack_client.rtm_send_message(channel_id, update_message)
 				print 'Sent updates about `{}` to #{}!'.format(tournament_tracker.tournament_url, channel_name)
 
-		time.sleep(2)
+		time.sleep(3)
 else:
-	print "Connection failed."
+	print 'Connection failed.'

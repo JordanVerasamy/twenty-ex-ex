@@ -52,33 +52,11 @@ class TournamentTracker:
 
 		for match in match_list:
 			if match['state'] == 'complete':
-				condensed_match = CondensedMatch(participant_ids[match['winner-id']], 
-				                                 participant_ids[match['loser-id']], 
+				condensed_match = CondensedMatch(participant_ids[match['winner-id']],
+				                                 participant_ids[match['loser-id']],
 				                                 match['round'])
 				if condensed_match not in self.condensed_matches:
 					new_matches.append(condensed_match)
 					self.condensed_matches.append(condensed_match)
 
 		return new_matches
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
