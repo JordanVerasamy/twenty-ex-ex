@@ -5,7 +5,6 @@ from tournamenttracker import TournamentTracker
 from slackclient import SlackClient
 
 username = config.challonge_username
-#tournament_url = config.tournament_url
 tournament_url = ''
 
 challonge_api_key = config.challonge_api_key
@@ -23,28 +22,30 @@ def follow_tournament(tournament_url):
 #def unfollow_tournament(tournament_url):
 	#not implemented yet
 
-
 def execute_command(command, args):
 	if command == 'help':
-		output_message = 'Here\'s a list of available commands:\n' + '```!20xx help\n' + '!20xx follow\n' + '!20xx unfollow```' 
+		output_message = 'Here\'s a list of available commands:\n```{}\n{}\n{}\n{}```'.format('!20xx help',
+		                                                                                      '!20xx info',
+																							  '!20xx follow',
+																							  '!20xx unfollow')
+	elif command == 'info':
+		output_message = 'Here\'s a list of all the tournaments you\'re following right now:\n```'
+		for tournament_tracker in tournament_trackers:
+			output_message = output_message + '{}\n'.format(tournament_tracker.tournament_url)
+		output_message = output_message + '```'
 	elif command == 'follow':
 		follow_tournament(args[0])
 		output_message = 'Started following `{}`!'.format(args[0])
 	elif command == 'unfollow':
 		#unfollow_tournament(args[0])
 		output_message = 'No longer following `{}`'.format(args[0])
-	elif command == 'info':
-		output_message = 'Here\'s a list of all the tournaments you\'re following right now:\n```
-		for tournament_tracker in tournament_trackers:
-			output_message = output_message + '{}\n'.format(tournament_tracker.tournament_url)
-		output_message = output_message + '```'
 	else:
 		output_message = 'Couldn\'t recognize your command. Enter `!20xx help` for more info.'
 
 	slack_client.rtm_send_message(channel_id, output_message)
 
 def create_update_message(message_list, tournament_url):
-	update_message = '```Updates about '
+	update_message = '```Updates about {}:\n\n'.format(tournament_url)
 	for condensed_match in new_matches:
 		update_message = update_message + str(condensed_match) + '\n'
 	return update_message + '```'
