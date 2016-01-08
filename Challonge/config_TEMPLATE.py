@@ -6,6 +6,8 @@ slack_api_token = 'YOUR_TOKEN_HERE'
 channels = {'NAME' : 'ID', 'NAME' : 'ID'}
 channel_to_connect_to = 'NAME'
 
+keyword = '!BOTNAME'
+
 # Save this as `config.py` and replace the placeholders with their actual values.
 
 # The Challonge username is just your Challonge account name.
