@@ -33,6 +33,9 @@ class TournamentTracker:
 		challonge.set_credentials(self.username, self.api_key)
 
 		self.condensed_matches = []
+
+		self.players = []
+
 		self.num_participants = -1
 
 	def pull_matches(self): # updates condensed_matches list, returns the new one
@@ -61,3 +64,9 @@ class TournamentTracker:
 					self.condensed_matches.append(condensed_match)
 
 		return new_matches
+
+	def follow_players(self, players_to_add):
+		self.players.append(players_to_add)
+
+	def remove_players(self, players_to_remove):
+		self.players = filter(lambda x: x not in players_to_remove, players)

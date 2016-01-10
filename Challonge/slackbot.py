@@ -15,6 +15,7 @@ channel_id = config.channels[channel_name]
 keyword = config.keyword
 
 tournament_trackers = []
+
 slack_client = SlackClient(slack_api_token)
 
 ### ----- COMMANDS RECOGNIZED BY SLACKBOT ----- ###
@@ -26,24 +27,42 @@ def help_command(args):
 
 def info_command(args):
 	output_message = 'Here\'s a list of all the tournaments you\'re following right now:\n```'
-	output_message += '\n'.join('{}'.format(tt.tournament_url) for tt in tournament_trackers)
+	output_message += '\n'.join('{}: following {}'.format(tt.tournament_url, tt.players) for tt in tournament_trackers)
 	return output_message + '```'
 
-def follow_command(args):
+def track_command(args):
 	for tournament_url in args:
 		tournament_trackers.append(TournamentTracker(challonge_username, tournament_url, challonge_api_key))
-	return 'Started following `{}`'.format('`, `'.join(args))
+	return 'Started tracking `{}`'.format('`, `'.join(args))
 
-def unfollow_command(args):
+def untrack_command(args):
 	global tournament_trackers
 	tournament_trackers = filter(lambda tt: tt.tournament_url not in args, tournament_trackers)
-	return 'No longer following `{}`'.format('`, `'.join(args))
+	return 'No longer tracking `{}`'.format('`, `'.join(args))
+
+def follow_command(args):
+	players_to_follow = args[1:]
+	for tt in tournament_trackers:
+		if tt.tournament_url == args[0]:
+			print players_to_follow
+			tt.follow_players(players_to_follow)
+	return 'Now following {} in {}!'.format(' '.join('{}'.format(p) for p in players_to_follow), args[0])
+
+def unfollow_command(args):
+	players_to_unfollow = args[1:]
+	for tt in tournament_trackers:
+		if tt.tournament_url == args[0]:
+			tt.unfollow_players(players_to_unfollow)
+	return 'No longer following {} in {}!'.format(' '.join('{}'.format(p) for p in players_to_unfollow), args[0])
+
 
 commands = {
-	    'help' : {'function': help_command,     'contract': ''},
-	    'info' : {'function': info_command,     'contract': ''},
-	  'follow' : {'function': follow_command,   'contract': '<CHALLONGE_TOURNAMENT_URL> ...'},
-	'unfollow' : {'function': unfollow_command, 'contract': '<CHALLONGE_TOURNAMENT_URL> ...'}
+	'help'    : {'function': help_command,     'contract': ''},
+	'info'    : {'function': info_command,     'contract': ''},
+	'track'   : {'function': track_command,    'contract': '<CHALLONGE_TOURNAMENT_URL>*'},
+	'untrack' : {'function': untrack_command,  'contract': '<CHALLONGE_TOURNAMENT_URL>*'},
+	'follow'  : {'function': follow_command,   'contract': '<CHALLONGE_TOURNAMENT_URL> <PLAYER_ID>*'},
+	'unfollow': {'function': unfollow_command, 'contract': '<CHALLONGE_TOURNAMENT_URL> <PLAYER_ID>*'}
 }
 
 ### ------------------------------------------- ###
