@@ -1,6 +1,9 @@
+import sys
+import traceback
 import challonge
 import time
 import config
+
 from tournamenttracker import TournamentTracker
 from slackclient import SlackClient
 
@@ -26,11 +29,22 @@ def help_command(args):
 	return output_message + '```'
 
 def info_command(args):
+	if not tournament_trackers:
+		return 'Not currently following any tournaments!'
 	output_message = 'Here\'s a list of all the tournaments you\'re following right now:\n```'
 	output_message += '\n'.join('{}: following {}'.format(tt.tournament_url, tt.players) for tt in tournament_trackers)
 	return output_message + '```'
 
-def track_command(args):
+def details_command(args):
+	output_message = 'Here\'s a list of all the players in `{}` you\'re following: `'.format(args[0])
+	for tt in tournament_trackers:
+		if tt.tournament_url == args[0]:
+			if not tt.players:
+				return 'You are not following any players in `{}`'.format(args[0])
+			output_message += ', '.join('{}'.format(p) for p in tt.players)
+	return output_message + '`'
+
+def track_command(args): #TODO: make this fail if the tournament doesn't actually exist on Challonge
 	for tournament_url in args:
 		tournament_trackers.append(TournamentTracker(challonge_username, tournament_url, challonge_api_key))
 	return 'Started tracking `{}`'.format('`, `'.join(args))
@@ -40,11 +54,9 @@ def untrack_command(args):
 	tournament_trackers = filter(lambda tt: tt.tournament_url not in args, tournament_trackers)
 	return 'No longer tracking `{}`'.format('`, `'.join(args))
 
-def follow_command(args):
+def follow_command(args): #TODO: make this fail if there does not exist a player with that name in the tournament
 	players_to_follow = args[1:]
-	for tt in tournament_trackers:
-		if tt.tournament_url == args[0]:
-			tt.follow_players(players_to_follow)
+	tt.follow_players(players_to_follow)
 	return 'Now following `{}` in `{}`!'.format(', '.join('{}'.format(p) for p in players_to_follow), args[0])
 
 def unfollow_command(args):
@@ -53,13 +65,6 @@ def unfollow_command(args):
 		if tt.tournament_url == args[0]:
 			tt.unfollow_players(players_to_unfollow)
 	return 'No longer following `{}` in `{}`!'.format(', '.join('{}'.format(p) for p in players_to_unfollow), args[0])
-
-def details_command(args):
-	for tt in tournament_trackers:
-		#print tt
-		#print args[0]
-		if tt.tournament_url == args[0]:
-			return tt.players
 
 commands = {
 	'help'    : {'function': help_command,     'contract': ''},
@@ -89,21 +94,28 @@ def create_update_message(message_list, tournament_url):
 
 if slack_client.rtm_connect():
 	while True:
-		new_messages = slack_client.rtm_read()
+		try:
+			new_messages = slack_client.rtm_read()
 
-		for message in new_messages:
-			if 'text' in message and 'channel' in message:
-				if message['channel'] == channel_id:
-					message_body = message['text'].split(' ')
-					if message_body[0] == keyword:
-						execute_command(message_body[1], message_body[2:])
+			for message in new_messages:
+				if 'text' in message and 'channel' in message:
+					if message['channel'] == channel_id:
+						message_body = message['text'].split(' ')
+						if message_body[0] == keyword:
+							execute_command(message_body[1], message_body[2:])
 
-		for tournament_tracker in tournament_trackers:
-			new_matches = tournament_tracker.pull_matches()
-			if new_matches:
-				update_message = create_update_message(new_matches, tournament_tracker.tournament_url)
-				slack_client.rtm_send_message(channel_id, update_message)
-				print 'Sent updates about `{}` to #{}!'.format(tournament_tracker.tournament_url, channel_name)
+			for tournament_tracker in tournament_trackers:
+				new_matches = tournament_tracker.pull_matches()
+				if new_matches:
+					update_message = create_update_message(new_matches, tournament_tracker.tournament_url)
+					slack_client.rtm_send_message(channel_id, update_message)
+					#print 'Sent updates about `{}` to #{}!'.format(tournament_tracker.tournament_url, channel_name)
+		except Exception:
+			print 'Error encountered.'
+			#exc_type, exc_value, exc_traceback = sys.exc_info()
+    		#lines = traceback.format_exception(exc_type, exc_value, exc_traceback)
+    		#print ''.join('!! ' + line for line in lines)
+			traceback.print_exc()
 
 		time.sleep(3)
 else:

@@ -17,9 +17,7 @@ class CondensedMatch:
 		return not self.__eq__(other)
 
 	def __str__(self):
-		bracket = 'loser\'s'
-		if self.round > 0:
-			bracket = 'winner\'s'
+		bracket = 'loser\'s' if self.round < 0 else 'winner\'s'
 		return '{} defeated {} in {} round {}'.format(self.winner, self.loser, bracket, abs(self.round))
 
 class TournamentTracker:
@@ -66,7 +64,7 @@ class TournamentTracker:
 		return new_matches
 
 	def follow_players(self, players_to_add):
-		self.players.append(players_to_add)
+		self.players.extend(players_to_add)
 
 	def unfollow_players(self, players_to_remove):
 		self.players = filter(lambda x: x not in players_to_remove, self.players)
