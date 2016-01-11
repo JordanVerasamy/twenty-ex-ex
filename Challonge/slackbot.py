@@ -44,17 +44,22 @@ def follow_command(args):
 	players_to_follow = args[1:]
 	for tt in tournament_trackers:
 		if tt.tournament_url == args[0]:
-			print players_to_follow
 			tt.follow_players(players_to_follow)
-	return 'Now following {} in {}!'.format(' '.join('{}'.format(p) for p in players_to_follow), args[0])
+	return 'Now following `{}` in `{}`!'.format(', '.join('{}'.format(p) for p in players_to_follow), args[0])
 
 def unfollow_command(args):
 	players_to_unfollow = args[1:]
 	for tt in tournament_trackers:
 		if tt.tournament_url == args[0]:
 			tt.unfollow_players(players_to_unfollow)
-	return 'No longer following {} in {}!'.format(' '.join('{}'.format(p) for p in players_to_unfollow), args[0])
+	return 'No longer following `{}` in `{}`!'.format(', '.join('{}'.format(p) for p in players_to_unfollow), args[0])
 
+def details_command(args):
+	for tt in tournament_trackers:
+		#print tt
+		#print args[0]
+		if tt.tournament_url == args[0]:
+			return tt.players
 
 commands = {
 	'help'    : {'function': help_command,     'contract': ''},
@@ -62,7 +67,8 @@ commands = {
 	'track'   : {'function': track_command,    'contract': '<CHALLONGE_TOURNAMENT_URL>*'},
 	'untrack' : {'function': untrack_command,  'contract': '<CHALLONGE_TOURNAMENT_URL>*'},
 	'follow'  : {'function': follow_command,   'contract': '<CHALLONGE_TOURNAMENT_URL> <PLAYER_ID>*'},
-	'unfollow': {'function': unfollow_command, 'contract': '<CHALLONGE_TOURNAMENT_URL> <PLAYER_ID>*'}
+	'unfollow': {'function': unfollow_command, 'contract': '<CHALLONGE_TOURNAMENT_URL> <PLAYER_ID>*'},
+	'details' : {'function': details_command,  'contract': '<CHALLONGE_TOURNAMENT_URL>'}
 }
 
 ### ------------------------------------------- ###

@@ -68,5 +68,5 @@ class TournamentTracker:
 	def follow_players(self, players_to_add):
 		self.players.append(players_to_add)
 
-	def remove_players(self, players_to_remove):
-		self.players = filter(lambda x: x not in players_to_remove, players)
+	def unfollow_players(self, players_to_remove):
+		self.players = filter(lambda x: x not in players_to_remove, self.players)
