@@ -56,7 +56,9 @@ def untrack_command(args):
 
 def follow_command(args): #TODO: make this fail if there does not exist a player with that name in the tournament
 	players_to_follow = args[1:]
-	tt.follow_players(players_to_follow)
+	for tt in tournament_trackers:
+		 if tt.tournament_url == args[0]:
+			tt.follow_players(players_to_follow)
 	return 'Now following `{}` in `{}`!'.format(', '.join('{}'.format(p) for p in players_to_follow), args[0])
 
 def unfollow_command(args):
@@ -85,18 +87,19 @@ def execute_command(command, args):
 		output_message = 'Couldn\'t recognize your command. Enter `{} help` for more info.'.format(keyword)
 	slack_client.rtm_send_message(channel_id, output_message)
 
-def create_update_message(message_list, tournament_url):
+def create_update_message(message_list, tournament_url, players):
 	update_message = '```Updates about {}:\n\n'.format(tournament_url)
 	update_message += '\n'.join(str(match) for match in message_list)
 	return update_message + '```'
 
 ### ------------------------------------------- ###
 
+print 'Attempting to connect...'
 if slack_client.rtm_connect():
+	print 'Connection successful.'
 	while True:
 		try:
 			new_messages = slack_client.rtm_read()
-
 			for message in new_messages:
 				if 'text' in message and 'channel' in message:
 					if message['channel'] == channel_id:
@@ -107,15 +110,17 @@ if slack_client.rtm_connect():
 			for tournament_tracker in tournament_trackers:
 				new_matches = tournament_tracker.pull_matches()
 				if new_matches:
-					update_message = create_update_message(new_matches, tournament_tracker.tournament_url)
+					update_message = create_update_message(new_matches, tournament_tracker.tournament_url, tournament_tracker.players)
 					slack_client.rtm_send_message(channel_id, update_message)
 					#print 'Sent updates about `{}` to #{}!'.format(tournament_tracker.tournament_url, channel_name)
 		except Exception:
 			print 'Error encountered.'
+			slack_client.rtm_send_message(channel_id, 'Error encountered... @{}, look at the logs pls.'.format(config.admin_name))
 			#exc_type, exc_value, exc_traceback = sys.exc_info()
     		#lines = traceback.format_exception(exc_type, exc_value, exc_traceback)
     		#print ''.join('!! ' + line for line in lines)
 			traceback.print_exc()
+			break
 
 		time.sleep(3)
 else:

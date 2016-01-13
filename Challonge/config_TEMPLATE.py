@@ -7,6 +7,7 @@ channels = {'NAME' : 'ID', 'NAME' : 'ID'}
 channel_to_connect_to = 'NAME'
 
 keyword = '!BOTNAME'
+admin_name = 'bob'
 
 # Save this as `config.py` and replace the placeholders with their actual values.
 

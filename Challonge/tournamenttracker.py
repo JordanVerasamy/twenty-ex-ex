@@ -44,6 +44,7 @@ class TournamentTracker:
 
 		participant_ids = {}
 		new_matches = []
+		newly_relevant_matches = []
 
 		for participant in participant_list:
 			name = participant['display-name']
@@ -57,11 +58,15 @@ class TournamentTracker:
 					participant_ids[match['winner-id']],
 					participant_ids[match['loser-id']],
 					match['round'])
-				if condensed_match not in self.condensed_matches:
+				if condensed_match not in self.condensed_matches and (condensed_match.winner in self.players or condensed_match.loser in self.players):
 					new_matches.append(condensed_match)
 					self.condensed_matches.append(condensed_match)
 
-		return new_matches
+		for condensed_match in self.condensed_matches:
+			if condensed_match not in self.condensed_matches and (condensed_match.winner in self.players or condensed_match.loser in self.players):
+				newly_relevant_matches.append(condensed_match)
+
+		return new_matches.extend(newly_relevant_matches)
 
 	def follow_players(self, players_to_add):
 		self.players.extend(players_to_add)
