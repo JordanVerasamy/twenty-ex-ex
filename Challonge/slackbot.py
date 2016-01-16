@@ -122,6 +122,6 @@ if slack_client.rtm_connect():
 			traceback.print_exc()
 			break
 
-		time.sleep(3)
+		time.sleep(2)
 else:
 	print 'Connection failed.'
