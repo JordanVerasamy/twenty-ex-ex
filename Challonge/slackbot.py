@@ -55,8 +55,8 @@ def help_command(args):
 
 def status_command(args):
 	if not tournament_trackers:
-		return 'Not currently following any tournaments!'
-	output_message = 'Here\'s a list of all the tournaments you\'re following right now:\n```'
+		return 'Not currently tracking any tournaments!'
+	output_message = 'Here\'s a list of all the tournaments you\'re tracking right now:\n```'
 	output_message += '\n'.join('{}: following {}'.format(tt.tournament_url, tt.followed_players) for tt in tournament_trackers)
 	return output_message + '```'
 
@@ -93,16 +93,21 @@ def untrack_command(args):
 def follow_command(args):
 	players_to_follow = args[1:]
 	failed = []
+	tournament_found = False
 
 	for tt in tournament_trackers:
 		 if tt.tournament_url == args[0]:
-		 	for player_name in players_to_follow:
-		 		if player_name not in tt.all_players:
-		 			failed.append(player_name)
-			tt.follow_players(players_to_follow)
+			tournament_found = True
+			for player_name in players_to_follow:
+				if player_name in tt.all_players:
+					tt.follow_players(players_to_follow)
+				else:
+					failed.append(player_name)
 
 	if failed:
 		raise PlayerNotInTournamentError(failed)
+	if not tournament_found:
+		raise TournamentDoesNotExistError([args[0]])
 
 	return 'Now following `{}` in `{}`!'.format(', '.join('{}'.format(p) for p in players_to_follow), args[0])
 
@@ -116,10 +121,10 @@ def unfollow_command(args):
 commands = {
 	'help'    : {'function': help_command,     'contract': ''},
 	'status'  : {'function': status_command,   'contract': ''},
-	'track'   : {'function': track_command,    'contract': '<CHALLONGE_TOURNAMENT_URL>*'},
-	'untrack' : {'function': untrack_command,  'contract': '<CHALLONGE_TOURNAMENT_URL>*'},
-	'follow'  : {'function': follow_command,   'contract': '<CHALLONGE_TOURNAMENT_URL> <PLAYER_ID>*'},
-	'unfollow': {'function': unfollow_command, 'contract': '<CHALLONGE_TOURNAMENT_URL> <PLAYER_ID>*'},
+	'track'   : {'function': track_command,    'contract': '<CHALLONGE_TOURNAMENT_URL>+'},
+	'untrack' : {'function': untrack_command,  'contract': '<CHALLONGE_TOURNAMENT_URL>+'},
+	'follow'  : {'function': follow_command,   'contract': '<CHALLONGE_TOURNAMENT_URL> <PLAYER_ID>+'},
+	'unfollow': {'function': unfollow_command, 'contract': '<CHALLONGE_TOURNAMENT_URL> <PLAYER_ID>+'},
 	'details' : {'function': details_command,  'contract': '<CHALLONGE_TOURNAMENT_URL>'}
 }
 
@@ -159,12 +164,12 @@ if slack_client.rtm_connect():
 					slack_client.rtm_send_message(CHANNEL_ID, update_message)
 
 		except TournamentDoesNotExistError as e:
-			slack_client.rtm_send_message(CHANNEL_ID, "Your command failed to execute because the following tournaments don't exist:")
+			slack_client.rtm_send_message(CHANNEL_ID, "The following tournaments weren't tracked, because they don't seem to exist:")
 			slack_client.rtm_send_message(CHANNEL_ID, '`{}`'.format(', '.join(e.value)))
 			traceback.print_exc()
 
 		except PlayerNotInTournamentError as e:
-			slack_client.rtm_send_message(CHANNEL_ID, "Your command failed to execute because the following players aren't in the given tournament:")
+			slack_client.rtm_send_message(CHANNEL_ID, "The following players weren't followed, because they don't seem to be in the given tournament:")
 			slack_client.rtm_send_message(CHANNEL_ID, '`{}`'.format(', '.join(e.value)))
 			traceback.print_exc()
 
