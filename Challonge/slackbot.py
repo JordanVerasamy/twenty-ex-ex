@@ -50,14 +50,14 @@ class PlayerNotInTournamentError(Exception):
 
 def help_command(args):
 	output_message = 'Here\'s a list of available commands:\n```'
-	output_message += '\n'.join('{} {} {}'.format(keyword, c, commands[c]['contract']) for c in commands)
+	output_message += '\n'.join('{} {} {}'.format(KEYWORD, c, commands[c]['contract']) for c in commands)
 	return output_message + '```'
 
 def status_command(args):
 	if not tournament_trackers:
 		return 'Not currently tracking any tournaments!'
 	output_message = 'Here\'s a list of all the tournaments you\'re tracking right now:\n```'
-	output_message += '\n'.join('{}: following {}'.format(tt.tournament_url, tt.followed_players) for tt in tournament_trackers)
+	output_message += '\n'.join('{}: following {}'.format(tt.tournament_url, ', '.join(tt.followed_players)) for tt in tournament_trackers)
 	return output_message + '```'
 
 def details_command(args):
@@ -100,7 +100,7 @@ def follow_command(args):
 			tournament_found = True
 			for player_name in players_to_follow:
 				if player_name in tt.all_players:
-					tt.follow_players(players_to_follow)
+					tt.follow_players([player_name])
 				else:
 					failed.append(player_name)
 
@@ -121,7 +121,7 @@ def unfollow_command(args):
 commands = {
 	'help'    : {'function': help_command,     'contract': ''},
 	'status'  : {'function': status_command,   'contract': ''},
-	'track'   : {'function': track_command,    'contract': '<CHALLONGE_TOURNAMENT_URL>+'},
+	'track'   : {'function': track_command,    'contract': '<CHALLONGE_TOURNAMENT_URLKEYWORD>+'},
 	'untrack' : {'function': untrack_command,  'contract': '<CHALLONGE_TOURNAMENT_URL>+'},
 	'follow'  : {'function': follow_command,   'contract': '<CHALLONGE_TOURNAMENT_URL> <PLAYER_ID>+'},
 	'unfollow': {'function': unfollow_command, 'contract': '<CHALLONGE_TOURNAMENT_URL> <PLAYER_ID>+'},
@@ -130,12 +130,12 @@ commands = {
 
 ### ----------- CORE LOGIC FUNCTIONS ---------- ###
 
-def execute_command(command, args):
+def execute_command(channel, command, args):
 	if command in commands:
 		output_message = commands[command]['function'](args)
 	else:
-		output_message = 'Couldn\'t recognize your command. Enter `{} help` for more info.'.format(keyword)
-	slack_client.rtm_send_message(CHANNEL_ID, output_message)
+		output_message = 'Couldn\'t recognize your command. Enter `{} help` for more info.'.format(KEYWORD)
+	slack_client.rtm_send_message(channel, output_message)
 
 def create_update_message(message_list, tournament_url, players):
 	update_message = '```Updates about {}:\n\n'.format(tournament_url)
@@ -152,10 +152,10 @@ if slack_client.rtm_connect():
 			new_messages = slack_client.rtm_read()
 			for message in new_messages:
 				if 'text' in message and 'channel' in message:
-					if message['channel'] == CHANNEL_ID:
-						message_body = message['text'].split(' ')
-						if message_body[0] == KEYWORD:
-							execute_command(message_body[1], message_body[2:])
+					channel = message['channel']
+					message_body = message['text'].split(' ')
+					if message_body[0] == KEYWORD:
+						execute_command(channel, message_body[1], message_body[2:])
 
 			for tournament_tracker in tournament_trackers:
 				new_matches = tournament_tracker.pull_matches()
@@ -164,7 +164,7 @@ if slack_client.rtm_connect():
 					slack_client.rtm_send_message(CHANNEL_ID, update_message)
 
 		except TournamentDoesNotExistError as e:
-			slack_client.rtm_send_message(CHANNEL_ID, "The following tournaments weren't tracked, because they don't seem to exist:")
+			slack_client.rtm_send_message(CHANNEL_ID, "The following tournaments were ignored, because they don't seem to exist:")
 			slack_client.rtm_send_message(CHANNEL_ID, '`{}`'.format(', '.join(e.value)))
 			traceback.print_exc()
 
