@@ -163,7 +163,7 @@ if slack_client.rtm_connect():
 				new_matches = tournament_tracker.pull_matches()
 				if new_matches:
 					update_message = create_update_message(new_matches, tournament_tracker.tournament_url, tournament_tracker.followed_players)
-					print 'Sent updates about `{}` to `{}`'.format(tournament_tracker.tournament_url, CHANNEL_TO_CONNECT_TO)
+					print 'Sent updates about `{}` to `{}`'.format(tournament_tracker.tournament_url, CHANNEL_NAME)
 					slack_client.rtm_send_message(CHANNEL_ID, update_message)
 
 		except TournamentDoesNotExistError as e:
