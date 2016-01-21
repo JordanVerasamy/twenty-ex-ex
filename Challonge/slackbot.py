@@ -132,10 +132,12 @@ commands = {
 
 def execute_command(channel, command, args):
 	if command in commands:
+		print 'Received command: `{}` with args: `{}` in channel with ID {}'.format(command, args, channel)
 		output_message = commands[command]['function'](args)
 	else:
 		output_message = 'Couldn\'t recognize your command. Enter `{} help` for more info.'.format(KEYWORD)
 	slack_client.rtm_send_message(channel, output_message)
+	print 'Sent message: `{}` to channel with ID {}'.format(output_message, channel)
 
 def create_update_message(message_list, tournament_url, players):
 	update_message = '```Updates about {}:\n\n'.format(tournament_url)
@@ -161,6 +163,7 @@ if slack_client.rtm_connect():
 				new_matches = tournament_tracker.pull_matches()
 				if new_matches:
 					update_message = create_update_message(new_matches, tournament_tracker.tournament_url, tournament_tracker.followed_players)
+					print 'Sent updates about `{}` to `{}`'.format(tournament_tracker.tournament_url, CHANNEL_TO_CONNECT_TO)
 					slack_client.rtm_send_message(CHANNEL_ID, update_message)
 
 		except TournamentDoesNotExistError as e:
