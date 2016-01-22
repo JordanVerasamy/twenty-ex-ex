@@ -22,11 +22,12 @@ class CondensedMatch:
 
 class TournamentTracker:
 
-	def __init__(self, username, tournament_url, api_key):
+	def __init__(self, username, tournament_url, api_key, channel):
 
 		self.username = username
 		self.tournament_url = tournament_url
 		self.api_key = api_key
+		self.channel = channel
 
 		self.condensed_matches = []
 
@@ -67,8 +68,8 @@ class TournamentTracker:
 
 		return new_matches
 
-	def follow_players(self, players_to_add):
+	def follow_players(self, *players_to_add):
 		self.followed_players.extend(players_to_add)
 
-	def unfollow_players(self, players_to_remove):
+	def unfollow_players(self, *players_to_remove):
 		self.followed_players = filter(lambda x: x not in players_to_remove, self.followed_players)
