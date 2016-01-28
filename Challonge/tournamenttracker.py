@@ -20,6 +20,10 @@ class CondensedMatch:
 		bracket = 'loser\'s' if self.round < 0 else 'winner\'s'
 		return '{} defeated {} in {} round {}'.format(self.winner, self.loser, bracket, abs(self.round))
 
+	def participated(self, player_name):
+		return self.winner == player_name or self.loser == player_name
+
+
 class TournamentTracker:
 
 	def __init__(self, username, tournament_url, api_key, channel):
@@ -62,14 +66,19 @@ class TournamentTracker:
 					self.participant_ids[match['winner-id']],
 					self.participant_ids[match['loser-id']],
 					match['round'])
-				if condensed_match not in self.condensed_matches and (condensed_match.winner in self.followed_players or condensed_match.loser in self.followed_players):
-					new_matches.append(condensed_match)
+				if condensed_match not in self.condensed_matches:
+					if condensed_match.winner in self.followed_players or condensed_match.loser in self.followed_players:
+						new_matches.append(condensed_match)
 					self.condensed_matches.append(condensed_match)
 
 		return new_matches
+
+	def get_player_matches(self, player_name):
+		player_matches = []
+		return filter(lambda match: match.participated(player_name), self.condensed_matches)
 
 	def follow_players(self, *players_to_add):
 		self.followed_players.extend(players_to_add)
 
 	def unfollow_players(self, *players_to_remove):
-		self.followed_players = filter(lambda x: x not in players_to_remove, self.followed_players)
+		self.followed_players = filter(lambda player: player not in players_to_remove, self.followed_players)
