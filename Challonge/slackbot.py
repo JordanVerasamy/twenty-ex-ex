@@ -45,6 +45,12 @@ class PlayerNotInTournamentError(Exception):
 	def __str__(self):
 		return repr(self.value)
 
+class TooFewArgsError(Exception):
+	def __init__(self, value):
+		self.value = value
+	def __str__(self):
+		return repr(self.value)
+
 ### ----- COMMANDS RECOGNIZED BY SLACKBOT ----- ###
 
 def help_command(channel, args):
@@ -66,6 +72,17 @@ def details_command(channel, args):
 		return 'You are not following any players in `{}`'.format(args[0])
 		output_message += ', '.join('{}'.format(p) for p in tt.followed_players)
 	return output_message + '`'
+
+def history_command(channel, args):
+	tournament_url = args[0]
+	player_name = args[1]
+	relevant_matches = tournament_trackers[tournament_url].get_player_matches(player_name)
+
+	output_message = '```{}\'s history in {}:\n\n'.format(player_name, tournament_url)
+	output_message += '\n'.join(str(match) for match in relevant_matches)
+	output_message += '```'
+
+	return output_message
 
 def track_command(channel, args): #TODO: make this work with Challonge subdomains
 	failed = []
@@ -118,13 +135,14 @@ def unfollow_command(channel, args):
 	return 'No longer following `{}` in `{}`!'.format(', '.join('{}'.format(p) for p in players_to_unfollow), args[0])
 
 commands = {
-	'help'    : {'function': help_command,     'contract': ''},
-	'status'  : {'function': status_command,   'contract': ''},
-	'track'   : {'function': track_command,    'contract': '<CHALLONGE_TOURNAMENT_URLKEYWORD>+'},
-	'untrack' : {'function': untrack_command,  'contract': '<CHALLONGE_TOURNAMENT_URL>+'},
-	'follow'  : {'function': follow_command,   'contract': '<CHALLONGE_TOURNAMENT_URL> <PLAYER_ID>+'},
-	'unfollow': {'function': unfollow_command, 'contract': '<CHALLONGE_TOURNAMENT_URL> <PLAYER_ID>+'},
-	'details' : {'function': details_command,  'contract': '<CHALLONGE_TOURNAMENT_URL>'}
+	'help'    : {'function': help_command,     'minargs': 0,  'contract': ''},
+	'status'  : {'function': status_command,   'minargs': 0,  'contract': ''},
+	'track'   : {'function': track_command,    'minargs': 1,  'contract': '<CHALLONGE_TOURNAMENT_URLKEYWORD>+'},
+	'untrack' : {'function': untrack_command,  'minargs': 1,  'contract': '<CHALLONGE_TOURNAMENT_URL>+'},
+	'follow'  : {'function': follow_command,   'minargs': 2,  'contract': '<CHALLONGE_TOURNAMENT_URL> <PLAYER_ID>+'},
+	'unfollow': {'function': unfollow_command, 'minargs': 2,  'contract': '<CHALLONGE_TOURNAMENT_URL> <PLAYER_ID>+'},
+	'details' : {'function': details_command,  'minargs': 1,  'contract': '<CHALLONGE_TOURNAMENT_URL>'},
+	'history' : {'function': history_command,  'minargs': 2,  'contract': '<CHALLONGE_TOURNAMENT_URL> <PLAYER_ID>'}
 }
 
 ### ----------- CORE LOGIC FUNCTIONS ---------- ###
@@ -133,7 +151,10 @@ commands = {
 def execute_command(channel, command, args):
 	print 'Received command: `{}` with args: `{}` in channel with ID {}'.format(command, args, channel)
 	if command in commands:
-		output_message = commands[command]['function'](channel, args)
+		if len(args) < commands[command]['minargs']:
+			raise TooFewArgsError([channel, command, len(args), commands[command]['minargs']])
+		else:
+			output_message = commands[command]['function'](channel, args)
 	else:
 		output_message = 'Couldn\'t recognize your command. Enter `{} help` for more info.'.format(KEYWORD)
 	slack_client.rtm_send_message(channel, output_message)
@@ -170,6 +191,14 @@ if slack_client.rtm_connect():
 		except PlayerNotInTournamentError as e:
 			slack_client.rtm_send_message(e.value[0], "The following players weren't followed, because they don't seem to be in the given tournament:")
 			slack_client.rtm_send_message(e.value[0], '`{}`'.format(', '.join(e.value[1])))
+			traceback.print_exc()
+
+		except TooFewArgsError as e:
+			command = e.value[1]
+			args_given = e.value[2]
+			args_reqd = e.value[3]
+			error_message = "`{}` requires {} arguments, but only {} given. Enter `{} help` if you're confused.".format(command, args_given, args_reqd, KEYWORD)
+			slack_client.rtm_send_message(e.value[0], error_message)
 			traceback.print_exc()
 
 		except Exception:
