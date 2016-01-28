@@ -100,12 +100,12 @@ def follow_command(channel, args):
 	if tournament_url not in tournament_trackers:
 		raise TournamentDoesNotExistError([channel, [args[0]]])
 
-		tt = tournament_trackers[tournament_url]
-		for player_name in players_to_follow:
-			if player_name in tt.all_players:
-				tt.follow_players(player_name)
-			else:
-				failed.append(player_name)
+	tt = tournament_trackers[tournament_url]
+	for player_name in players_to_follow:
+		if player_name in tt.all_players:
+			tt.follow_players(player_name)
+		else:
+			failed.append(player_name)
 
 	if failed:
 		raise PlayerNotInTournamentError([channel, failed])
@@ -160,7 +160,7 @@ if slack_client.rtm_connect():
 			for tournament_url in tournament_trackers:
 				new_matches = tournament_trackers[tournament_url].pull_matches()
 				if new_matches:
-					controller.publish(tournament_trackers[tournament_url])
+					controller.publish(tournament_url, new_matches)
 
 		except TournamentDoesNotExistError as e:
 			slack_client.rtm_send_message(e.value[0], "The following tournaments were ignored, because they don't seem to exist:")
