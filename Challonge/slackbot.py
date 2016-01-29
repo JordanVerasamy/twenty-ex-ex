@@ -33,6 +33,15 @@ def get_status_code(host, path="/"):
         traceback.print_exc()
         return None
 
+def tournament_exists(url):
+    if '-' in url:
+        subdomain = '{}.challonge.com'.format(url[:url.find('-')])
+        path = '/{}'.format(url[url.find('-')+1:])
+    else:
+        subdomain = 'challonge.com'
+        path = url
+    return get_status_code(subdomain, path)
+
 class TournamentDoesNotExistError(Exception):
 	def __init__(self, value):
 		self.value = value
@@ -84,15 +93,14 @@ def history_command(channel, args):
 
 	return output_message
 
-def track_command(channel, args): #TODO: make this work with Challonge subdomains
+def track_command(channel, args):
 	failed = []
 
 	for tournament_url in args:
 		if tournament_url in tournament_trackers:
 			controller.subscribe(channel, tournament_url)
 		else:
-			status_code = get_status_code('challonge.com', '/{}'.format(tournament_url))
-			if status_code == 200:
+			if tournament_exists(tournament_url):
 				tournament_trackers[tournament_url] = TournamentTracker(CHALLONGE_USERNAME, tournament_url, CHALLONGE_API_KEY, channel)
 				controller.subscribe(channel, tournament_url)
 			else:
