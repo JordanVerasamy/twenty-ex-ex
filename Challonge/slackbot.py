@@ -32,6 +32,33 @@ def get_status_code(host, path="/"):
     except StandardError:
         traceback.print_exc()
         return None
+        
+def split_into_args(input_str):
+    if not input_str:
+        return []
+
+    current_arg = ''
+    esc_count = 0
+    escaped = False
+
+    for char in input_str:
+        if escaped:
+            current_arg += char
+            escaped = False
+        elif char == '\\':
+            esc_count += 1
+            escaped = True
+        elif char == ' ':
+            break
+        else:
+            current_arg += char
+
+    rest_of_string = input_str[len(current_arg) + 1 + esc_count:]
+
+    arg_list = [current_arg]
+    arg_list.extend(split_into_args(rest_of_string))
+
+    return arg_list
 
 def tournament_exists(url):
     if '-' in url:
@@ -145,7 +172,7 @@ def unfollow_command(channel, args):
 commands = {
 	'help'    : {'function': help_command,     'minargs': 0,  'contract': ''},
 	'status'  : {'function': status_command,   'minargs': 0,  'contract': ''},
-	'track'   : {'function': track_command,    'minargs': 1,  'contract': '<CHALLONGE_TOURNAMENT_URLKEYWORD>+'},
+	'track'   : {'function': track_command,    'minargs': 1,  'contract': '<CHALLONGE_TOURNAMENT_URL>+'},
 	'untrack' : {'function': untrack_command,  'minargs': 1,  'contract': '<CHALLONGE_TOURNAMENT_URL>+'},
 	'follow'  : {'function': follow_command,   'minargs': 2,  'contract': '<CHALLONGE_TOURNAMENT_URL> <PLAYER_ID>+'},
 	'unfollow': {'function': unfollow_command, 'minargs': 2,  'contract': '<CHALLONGE_TOURNAMENT_URL> <PLAYER_ID>+'},
@@ -181,7 +208,7 @@ if slack_client.rtm_connect():
 			for message in new_messages:
 				if 'text' in message and 'channel' in message:
 					channel = message['channel']
-					message_body = message['text'].split(' ')
+					message_body = split_into_args(message['text'])
 					if message_body[0] == KEYWORD:
 						execute_command(channel, message_body[1], message_body[2:])
 
@@ -205,7 +232,7 @@ if slack_client.rtm_connect():
 			command = e.value[1]
 			args_given = e.value[2]
 			args_reqd = e.value[3]
-			error_message = "`{}` requires {} arguments, but only {} given. Enter `{} help` if you're confused.".format(command, args_given, args_reqd, KEYWORD)
+			error_message = "`{}` requires {} arguments, but only {} given. Enter `{} help` if you're confused.".format(command, args_reqd, args_given, KEYWORD)
 			slack_client.rtm_send_message(e.value[0], error_message)
 			traceback.print_exc()
 
