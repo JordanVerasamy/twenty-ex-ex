@@ -24,6 +24,13 @@ class CondensedMatch:
 		return self.winner == player_name or self.loser == player_name
 
 
+def get_placing(round, player_count):
+	thresholds = [1, 2, 3, 4, 5, 7, 9, 13, 17, 25, 33, 49, 65, 97, 129, 193]
+	relevant_threshold = min(filter(lambda x: x >= player_count, thresholds))
+	print relevant_threshold
+
+
+
 class TournamentTracker:
 
 	def __init__(self, username, tournament_url, api_key, channel):
@@ -38,7 +45,8 @@ class TournamentTracker:
 		self.followed_players = []
 		self.all_players = []
 
-		self.participant_ids = {}
+		self.participant_ids = {} # keys are IDs, values are names
+		self.placings = {} # keys are names, values are placings
 
 		self.initialize_challonge_data()
 
@@ -53,6 +61,41 @@ class TournamentTracker:
 			name = participant['display-name']
 			self.participant_ids[participant['id']] = name
 			self.all_players.append(name)
+
+	def get_placing(self, round):
+		thresholds = [1, 2, 3, 4, 6, 8, 12, 16, 24, 32, 48, 64, 96, 128, 192, 256]
+
+		suffixes = {
+			1: 'st',
+			2: 'nd',
+			3: 'rd',
+			4: 'th',
+			5: 'th',
+			6: 'th',
+			7: 'th',
+			8: 'th',
+			9: 'th',
+			0: 'th',
+		}
+
+		special_cases = {
+			13: 'th'
+		}
+
+		player_count = len(self.all_players)
+
+		relevant_threshold = min(filter(lambda x: x >= player_count, thresholds))
+		thresholds = thresholds[:thresholds.index(relevant_threshold)+1]
+
+		placing = thresholds[len(thresholds)-round-1] + 1
+
+		if placing in special_cases:
+			suffix = special_cases[placing]
+		else:
+			last_digit = placing % 10
+			suffix = str(suffixes[last_digit])
+
+		return '{}{}'.format(str(placing), suffix)
 
 	def pull_matches(self): # updates condensed_matches list, returns the new one
 
@@ -70,6 +113,8 @@ class TournamentTracker:
 					if condensed_match.winner in self.followed_players or condensed_match.loser in self.followed_players:
 						new_matches.append(condensed_match)
 					self.condensed_matches.append(condensed_match)
+				if condensed_match.round < 0:
+					self.placings[condensed_match.loser] = self.get_placing(-condensed_match.round)
 
 		return new_matches
 

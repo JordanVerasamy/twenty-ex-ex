@@ -32,7 +32,7 @@ def get_status_code(host, path="/"):
     except StandardError:
         traceback.print_exc()
         return None
-        
+
 def split_into_args(input_str):
     if not input_str:
         return []
@@ -106,16 +106,24 @@ def details_command(channel, args):
 	tt = tournament_trackers[args[0]]
 	if not tt.followed_players:
 		return 'You are not following any players in `{}`'.format(args[0])
-		output_message += ', '.join('{}'.format(p) for p in tt.followed_players)
+	output_message += ', '.join('{}'.format(p) for p in tt.followed_players)
 	return output_message + '`'
 
 def history_command(channel, args):
 	tournament_url = args[0]
 	player_name = args[1]
+
+	if player_name not in tournament_trackers[tournament_url].all_players:
+		raise PlayerNotInTournamentError([channel, [player_name]])
+
 	relevant_matches = tournament_trackers[tournament_url].get_player_matches(player_name)
 
 	output_message = '```{}\'s history in {}:\n\n'.format(player_name, tournament_url)
 	output_message += '\n'.join(str(match) for match in relevant_matches)
+
+	if player_name in tournament_trackers[tournament_url].placings:
+		output_message += '\n\nFinal placing: {}\n'.format(tournament_trackers[tournament_url].placings[player_name])
+
 	output_message += '```'
 
 	return output_message
@@ -224,7 +232,7 @@ if slack_client.rtm_connect():
 			traceback.print_exc()
 
 		except PlayerNotInTournamentError as e:
-			slack_client.rtm_send_message(e.value[0], "The following players weren't followed, because they don't seem to be in the given tournament:")
+			slack_client.rtm_send_message(e.value[0], "The following players were ignored, because they don't seem to be in the given tournament:")
 			slack_client.rtm_send_message(e.value[0], '`{}`'.format(', '.join(e.value[1])))
 			traceback.print_exc()
 
