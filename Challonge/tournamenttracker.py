@@ -23,6 +23,39 @@ class CondensedMatch:
 	def participated(self, player_name):
 		return self.winner == player_name or self.loser == player_name
 
+# consumes the round that a player lost in the losers bracket, returns where that player placed
+def round_to_placing(round, player_count):
+	thresholds = [2, 3, 4, 6, 8, 12, 16, 24, 32, 48, 64, 96, 128, 192, 256]
+
+	suffixes = {
+		1: 'st',
+		2: 'nd',
+		3: 'rd',
+		4: 'th',
+		5: 'th',
+		6: 'th',
+		7: 'th',
+		8: 'th',
+		9: 'th',
+		0: 'th',
+	}
+
+	special_cases = {
+		13: 'th'
+	}
+
+	relevant_threshold = min(filter(lambda x: x >= player_count, thresholds))
+	thresholds = thresholds[:thresholds.index(relevant_threshold) + 1]
+
+	placing = thresholds[len(thresholds) - round - 1] + 1
+
+	if placing in special_cases:
+		suffix = special_cases[placing]
+	else:
+		last_digit = placing % 10
+		suffix = str(suffixes[last_digit])
+
+	return '{}{}'.format(str(placing), suffix)
 
 class TournamentTracker:
 
@@ -38,7 +71,8 @@ class TournamentTracker:
 		self.followed_players = []
 		self.all_players = []
 
-		self.participant_ids = {}
+		self.participant_ids = {} # keys are IDs, values are names
+		self.placings = {} # keys are names, values are placings
 
 		self.initialize_challonge_data()
 
@@ -59,19 +93,36 @@ class TournamentTracker:
 		match_list = challonge.matches.index(self.tournament['id'])
 
 		new_matches = []
+		newly_eliminated_players = {} # keys are names, values are placings
 
 		for match in match_list:
 			if match['state'] == 'complete':
+
 				condensed_match = CondensedMatch(
 					self.participant_ids[match['winner-id']],
 					self.participant_ids[match['loser-id']],
-					match['round'])
+					match['round
+
 				if condensed_match not in self.condensed_matches:
+
 					if condensed_match.winner in self.followed_players or condensed_match.loser in self.followed_players:
 						new_matches.append(condensed_match)
 					self.condensed_matches.append(condensed_match)
 
-		return new_matches
+					if condensed_match.round < 0:
+						final_placing = round_to_placing(-condensed_match.round, len(self.all_players))
+						self.placings[condensed_match.loser] = final_placing
+						newly_eliminated_players[condensed_match.loser] = final_placing
+
+		if new_matches:
+			new_data = {
+				'new_matches' : new_matches,
+				'newly_eliminated_players' : newly_eliminated_players
+			}
+		else:
+			new_data = None
+
+		return new_data
 
 	def get_player_matches(self, player_name):
 		player_matches = []
@@ -79,6 +130,18 @@ class TournamentTracker:
 
 	def follow_players(self, *players_to_add):
 		self.followed_players.extend(players_to_add)
+
+	def get_followed_players(self):
+		return self.followed_players
+
+	def get_all_players(self):
+		return self.all_players
+
+	def get_placing(self, player_name):
+		if player_name in self.placings:
+			return self.placings[player_name]
+		else:
+			return None
 
 	def unfollow_players(self, *players_to_remove):
 		self.followed_players = filter(lambda player: player not in players_to_remove, self.followed_players)

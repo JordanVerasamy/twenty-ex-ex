@@ -33,6 +33,33 @@ def get_status_code(host, path="/"):
         traceback.print_exc()
         return None
 
+def split_into_args(input_str):
+    if not input_str:
+        return []
+
+    current_arg = ''
+    esc_count = 0
+    escaped = False
+
+    for char in input_str:
+        if escaped:
+            current_arg += char
+            escaped = False
+        elif char == '\\':
+            esc_count += 1
+            escaped = True
+        elif char == ' ':
+            break
+        else:
+            current_arg += char
+
+    rest_of_string = input_str[len(current_arg) + 1 + esc_count:]
+
+    arg_list = [current_arg]
+    arg_list.extend(split_into_args(rest_of_string))
+
+    return arg_list
+
 def tournament_exists(url):
     if '-' in url:
         subdomain = '{}.challonge.com'.format(url[:url.find('-')])
@@ -71,24 +98,31 @@ def status_command(channel, args):
 	if not tournament_trackers:
 		return 'Not currently tracking any tournaments!'
 	output_message = 'Here\'s a list of all the tournaments you\'re tracking right now:\n```'
-	output_message += '\n'.join('{}: following {}'.format(url, ', '.join(tournament_trackers[url].followed_players)) for url in tournament_trackers)
+	output_message += '\n'.join('{}: following {}'.format(url, ', '.join(tournament_trackers[url].get_followed_players())) for url in tournament_trackers)
 	return output_message + '```'
 
 def details_command(channel, args):
 	output_message = 'Here\'s a list of all the players in `{}` you\'re following: `'.format(args[0])
 	tt = tournament_trackers[args[0]]
-	if not tt.followed_players:
+	if not tt.get_followed_players():
 		return 'You are not following any players in `{}`'.format(args[0])
-		output_message += ', '.join('{}'.format(p) for p in tt.followed_players)
+	output_message += ', '.join('{}'.format(p) for p in tt.get_followed_players())
 	return output_message + '`'
 
 def history_command(channel, args):
 	tournament_url = args[0]
 	player_name = args[1]
-	relevant_matches = tournament_trackers[tournament_url].get_player_matches(player_name)
 
+	if player_name not in tournament_trackers[tournament_url].get_all_players():
+		raise PlayerNotInTournamentError([channel, [player_name]])
+
+	relevant_matches = tournament_trackers[tournament_url].get_player_matches(player_name)
 	output_message = '```{}\'s history in {}:\n\n'.format(player_name, tournament_url)
 	output_message += '\n'.join(str(match) for match in relevant_matches)
+
+	if tournament_trackers[tournament_url].get_placing(player_name):
+		output_message += '\n\nFinal placing: {}\n'.format(tournament_trackers[tournament_url].get_placing(player_name))
+
 	output_message += '```'
 
 	return output_message
@@ -127,7 +161,7 @@ def follow_command(channel, args):
 
 	tt = tournament_trackers[tournament_url]
 	for player_name in players_to_follow:
-		if player_name in tt.all_players:
+		if player_name in tt.get_all_players():
 			tt.follow_players(player_name)
 		else:
 			failed.append(player_name)
@@ -145,7 +179,7 @@ def unfollow_command(channel, args):
 commands = {
 	'help'    : {'function': help_command,     'minargs': 0,  'contract': ''},
 	'status'  : {'function': status_command,   'minargs': 0,  'contract': ''},
-	'track'   : {'function': track_command,    'minargs': 1,  'contract': '<CHALLONGE_TOURNAMENT_URLKEYWORD>+'},
+	'track'   : {'function': track_command,    'minargs': 1,  'contract': '<CHALLONGE_TOURNAMENT_URL>+'},
 	'untrack' : {'function': untrack_command,  'minargs': 1,  'contract': '<CHALLONGE_TOURNAMENT_URL>+'},
 	'follow'  : {'function': follow_command,   'minargs': 2,  'contract': '<CHALLONGE_TOURNAMENT_URL> <PLAYER_ID>+'},
 	'unfollow': {'function': unfollow_command, 'minargs': 2,  'contract': '<CHALLONGE_TOURNAMENT_URL> <PLAYER_ID>+'},
@@ -181,15 +215,15 @@ if slack_client.rtm_connect():
 			for message in new_messages:
 				if 'text' in message and 'channel' in message:
 					channel = message['channel']
-					message_body = message['text'].split(' ')
+					message_body = split_into_args(message['text'])
 					if message_body[0] == KEYWORD:
 						execute_command(channel, message_body[1], message_body[2:])
 
 			# post updates about tournaments, if necessary
 			for tournament_url in tournament_trackers:
-				new_matches = tournament_trackers[tournament_url].pull_matches()
-				if new_matches:
-					controller.publish(tournament_url, new_matches)
+				new_data = tournament_trackers[tournament_url].pull_matches()
+				if new_data:
+					controller.publish(tournament_url, new_data)
 
 		except TournamentDoesNotExistError as e:
 			slack_client.rtm_send_message(e.value[0], "The following tournaments were ignored, because they don't seem to exist:")
@@ -197,7 +231,7 @@ if slack_client.rtm_connect():
 			traceback.print_exc()
 
 		except PlayerNotInTournamentError as e:
-			slack_client.rtm_send_message(e.value[0], "The following players weren't followed, because they don't seem to be in the given tournament:")
+			slack_client.rtm_send_message(e.value[0], "The following players were ignored, because they don't seem to be in the given tournament:")
 			slack_client.rtm_send_message(e.value[0], '`{}`'.format(', '.join(e.value[1])))
 			traceback.print_exc()
 
@@ -205,7 +239,7 @@ if slack_client.rtm_connect():
 			command = e.value[1]
 			args_given = e.value[2]
 			args_reqd = e.value[3]
-			error_message = "`{}` requires {} arguments, but only {} given. Enter `{} help` if you're confused.".format(command, args_given, args_reqd, KEYWORD)
+			error_message = "`{}` requires {} arguments, but only {} given. Enter `{} help` if you're confused.".format(command, args_reqd, args_given, KEYWORD)
 			slack_client.rtm_send_message(e.value[0], error_message)
 			traceback.print_exc()
 
