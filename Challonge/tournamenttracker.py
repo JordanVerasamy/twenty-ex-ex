@@ -93,21 +93,36 @@ class TournamentTracker:
 		match_list = challonge.matches.index(self.tournament['id'])
 
 		new_matches = []
+		newly_eliminated_players = {} # keys are names, values are placings
 
 		for match in match_list:
 			if match['state'] == 'complete':
+
 				condensed_match = CondensedMatch(
 					self.participant_ids[match['winner-id']],
 					self.participant_ids[match['loser-id']],
-					match['round'])
+					match['round
+
 				if condensed_match not in self.condensed_matches:
+
 					if condensed_match.winner in self.followed_players or condensed_match.loser in self.followed_players:
 						new_matches.append(condensed_match)
 					self.condensed_matches.append(condensed_match)
-				if condensed_match.round < 0:
-					self.placings[condensed_match.loser] = round_to_placing(-condensed_match.round, len(self.all_players))
 
-		return new_matches
+					if condensed_match.round < 0:
+						final_placing = round_to_placing(-condensed_match.round, len(self.all_players))
+						self.placings[condensed_match.loser] = final_placing
+						newly_eliminated_players[condensed_match.loser] = final_placing
+
+		if new_matches:
+			new_data = {
+				'new_matches' : new_matches,
+				'newly_eliminated_players' : newly_eliminated_players
+			}
+		else:
+			new_data = None
+
+		return new_data
 
 	def get_player_matches(self, player_name):
 		player_matches = []

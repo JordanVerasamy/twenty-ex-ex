@@ -221,10 +221,9 @@ if slack_client.rtm_connect():
 
 			# post updates about tournaments, if necessary
 			for tournament_url in tournament_trackers:
-				new_matches = tournament_trackers[tournament_url].pull_matches()
-				if new_matches:
-					print 'new matches found!'
-					controller.publish(tournament_url, new_matches)
+				new_data = tournament_trackers[tournament_url].pull_matches()
+				if new_data:
+					controller.publish(tournament_url, new_data)
 
 		except TournamentDoesNotExistError as e:
 			slack_client.rtm_send_message(e.value[0], "The following tournaments were ignored, because they don't seem to exist:")
