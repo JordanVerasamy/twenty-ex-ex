@@ -120,8 +120,6 @@ def history_command(channel, args):
 	output_message = '```{}\'s history in {}:\n\n'.format(player_name, tournament_url)
 	output_message += '\n'.join(str(match) for match in relevant_matches)
 
-	#print 'placing:' + str(tournament_trackers[tournament_url].get_placing(player_name))
-
 	if tournament_trackers[tournament_url].get_placing(player_name):
 		output_message += '\n\nFinal placing: {}\n'.format(tournament_trackers[tournament_url].get_placing(player_name))
 
@@ -225,6 +223,7 @@ if slack_client.rtm_connect():
 			for tournament_url in tournament_trackers:
 				new_matches = tournament_trackers[tournament_url].pull_matches()
 				if new_matches:
+					print 'new matches found!'
 					controller.publish(tournament_url, new_matches)
 
 		except TournamentDoesNotExistError as e:
