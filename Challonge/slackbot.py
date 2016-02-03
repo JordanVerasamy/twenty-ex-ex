@@ -98,31 +98,32 @@ def status_command(channel, args):
 	if not tournament_trackers:
 		return 'Not currently tracking any tournaments!'
 	output_message = 'Here\'s a list of all the tournaments you\'re tracking right now:\n```'
-	output_message += '\n'.join('{}: following {}'.format(url, ', '.join(tournament_trackers[url].followed_players)) for url in tournament_trackers)
+	output_message += '\n'.join('{}: following {}'.format(url, ', '.join(tournament_trackers[url].get_followed_players())) for url in tournament_trackers)
 	return output_message + '```'
 
 def details_command(channel, args):
 	output_message = 'Here\'s a list of all the players in `{}` you\'re following: `'.format(args[0])
 	tt = tournament_trackers[args[0]]
-	if not tt.followed_players:
+	if not tt.get_followed_players():
 		return 'You are not following any players in `{}`'.format(args[0])
-	output_message += ', '.join('{}'.format(p) for p in tt.followed_players)
+	output_message += ', '.join('{}'.format(p) for p in tt.get_followed_players())
 	return output_message + '`'
 
 def history_command(channel, args):
 	tournament_url = args[0]
 	player_name = args[1]
 
-	if player_name not in tournament_trackers[tournament_url].all_players:
+	if player_name not in tournament_trackers[tournament_url].get_all_players():
 		raise PlayerNotInTournamentError([channel, [player_name]])
 
 	relevant_matches = tournament_trackers[tournament_url].get_player_matches(player_name)
-
 	output_message = '```{}\'s history in {}:\n\n'.format(player_name, tournament_url)
 	output_message += '\n'.join(str(match) for match in relevant_matches)
 
-	if player_name in tournament_trackers[tournament_url].placings:
-		output_message += '\n\nFinal placing: {}\n'.format(tournament_trackers[tournament_url].placings[player_name])
+	#print 'placing:' + str(tournament_trackers[tournament_url].get_placing(player_name))
+
+	if tournament_trackers[tournament_url].get_placing(player_name):
+		output_message += '\n\nFinal placing: {}\n'.format(tournament_trackers[tournament_url].get_placing(player_name))
 
 	output_message += '```'
 
@@ -162,7 +163,7 @@ def follow_command(channel, args):
 
 	tt = tournament_trackers[tournament_url]
 	for player_name in players_to_follow:
-		if player_name in tt.all_players:
+		if player_name in tt.get_all_players():
 			tt.follow_players(player_name)
 		else:
 			failed.append(player_name)
