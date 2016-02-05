@@ -9,6 +9,8 @@ from tournamenttracker import TournamentTracker
 from channelcontroller import ChannelController
 from slackclient import SlackClient
 
+### ----- CONSTANT AND GLOBAL DEFINITIONS ----- ###
+
 CHALLONGE_USERNAME = config.CHALLONGE_USERNAME
 CHALLONGE_API_KEY = config.CHALLONGE_API_KEY
 
@@ -25,49 +27,51 @@ controller = ChannelController(slack_client)
 ### ------ MISCELLANEOUS NECESSARY STUFF ------ ###
 
 def get_status_code(host, path="/"):
-    try:
-        conn = httplib.HTTPConnection(host)
-        conn.request("HEAD", path)
-        return conn.getresponse().status
-    except StandardError:
-        traceback.print_exc()
-        return None
-
-def split_into_args(input_str):
-    if not input_str:
-        return []
-
-    current_arg = ''
-    esc_count = 0
-    escaped = False
-
-    for char in input_str:
-        if escaped:
-            current_arg += char
-            escaped = False
-        elif char == '\\':
-            esc_count += 1
-            escaped = True
-        elif char == ' ':
-            break
-        else:
-            current_arg += char
-
-    rest_of_string = input_str[len(current_arg) + 1 + esc_count:]
-
-    arg_list = [current_arg]
-    arg_list.extend(split_into_args(rest_of_string))
-
-    return arg_list
+	try:
+		conn = httplib.HTTPConnection(host)
+		conn.request("HEAD", path)
+		return conn.getresponse().status
+	except StandardError:
+		traceback.print_exc()
+		return None
 
 def tournament_exists(url):
-    if '-' in url:
-        subdomain = '{}.challonge.com'.format(url[:url.find('-')])
-        path = '/{}'.format(url[url.find('-')+1:])
-    else:
-        subdomain = 'challonge.com'
-        path = url
-    return get_status_code(subdomain, path)
+	if '-' in url:
+		subdomain = '{}.challonge.com'.format(url[:url.find('-')])
+		path = '/{}'.format(url[url.find('-')+1:])
+	else:
+		subdomain = 'challonge.com'
+		path = url
+		return get_status_code(subdomain, path)
+
+# splits the input_str by spaces, except when the space is preceded by a backslash
+# essentially implements basic character escaping
+def split_into_args(input_str):
+	if not input_str:
+		return []
+
+	current_arg = ''
+	esc_count = 0
+	escaped = False
+
+	for char in input_str:
+		if escaped:
+			current_arg += char
+			escaped = False
+		elif char == '\\':
+			esc_count += 1
+			escaped = True
+		elif char == ' ':
+			break
+		else:
+			current_arg += char
+
+	rest_of_string = input_str[len(current_arg) + 1 + esc_count:]
+
+	arg_list = [current_arg]
+	arg_list.extend(split_into_args(rest_of_string))
+
+	return arg_list
 
 class TournamentDoesNotExistError(Exception):
 	def __init__(self, value):
