@@ -23,10 +23,16 @@ tournament_trackers = {} # keys are tournament urls, values are tournament track
 
 log_file = open(config.LOG_NAME, 'w')
 
+recent_channel = None
+
 slack_client = SlackClient(SLACK_API_TOKEN)
 controller = ChannelController(slack_client)
 
 ### ------ MISCELLANEOUS NECESSARY STUFF ------ ###
+
+def message_slack(channel, message):
+	recent_channel = channel
+	slack_client.rtm_send_message(channel, message)
 
 def print_to_log(message):
 	print '{}: {}'.format(time.asctime(), message)
@@ -209,7 +215,7 @@ def execute_command(channel, command, args):
 			output_message = commands[command]['function'](channel, args)
 	else:
 		output_message = 'Couldn\'t recognize your command. Enter `{} help` for more info.'.format(KEYWORD)
-	slack_client.rtm_send_message(channel, output_message)
+	message_slack(channel, output_message)
 
 ### ------------ MAIN PROGRAM LOOP ------------ ###
 
@@ -227,6 +233,7 @@ if slack_client.rtm_connect():
 					channel = message['channel']
 					message_body = split_into_args(message['text'])
 					if message_body[0] == KEYWORD:
+						recent_channel = channel
 						execute_command(channel, message_body[1], message_body[2:])
 
 			# post updates about tournaments, if necessary
@@ -236,13 +243,13 @@ if slack_client.rtm_connect():
 					controller.publish(tournament_url, new_data)
 
 		except TournamentDoesNotExistError as e:
-			slack_client.rtm_send_message(e.value[0], "The following tournaments were ignored, because they don't seem to exist:")
-			slack_client.rtm_send_message(e.value[0], '`{}`'.format(', '.join(e.value[1])))
+			message_slack(e.value[0], "The following tournaments were ignored, because they don't seem to exist:")
+			message_slack(e.value[0], '`{}`'.format(', '.join(e.value[1])))
 			traceback.print_exc()
 
 		except PlayerNotInTournamentError as e:
-			slack_client.rtm_send_message(e.value[0], "The following players were ignored, because they don't seem to be in the given tournament:")
-			slack_client.rtm_send_message(e.value[0], '`{}`'.format(', '.join(e.value[1])))
+			message_slack(e.value[0], "The following players were ignored, because they don't seem to be in the given tournament:")
+			message_slack(e.value[0], '`{}`'.format(', '.join(e.value[1])))
 			traceback.print_exc()
 
 		except TooFewArgsError as e:
@@ -250,12 +257,13 @@ if slack_client.rtm_connect():
 			args_given = e.value[2]
 			args_reqd = e.value[3]
 			error_message = "`{}` requires {} arguments, but only {} given. Enter `{} help` if you're confused.".format(command, args_reqd, args_given, KEYWORD)
-			slack_client.rtm_send_message(e.value[0], error_message)
+			message_slack(e.value[0], error_message)
 			traceback.print_exc()
 
 		except Exception:
 			print_to_log('Error encountered.')
-			#slack_client.rtm_send_message(e.value[0], 'Unhandled error occurred... @{}, look at the logs pls.'.format(ADMIN_NAME))
+			if recent_channel:
+				message_slack(recent_channel, 'Unhandled error occurred... @{}, look at the logs pls.'.format(ADMIN_NAME))
 			traceback.print_exc()
 			break
 
