@@ -9,6 +9,8 @@ from tournamenttracker import TournamentTracker
 from channelcontroller import ChannelController
 from slackclient import SlackClient
 
+### ----- CONSTANT AND GLOBAL DEFINITIONS ----- ###
+
 CHALLONGE_USERNAME = config.CHALLONGE_USERNAME
 CHALLONGE_API_KEY = config.CHALLONGE_API_KEY
 
@@ -19,55 +21,63 @@ ADMIN_NAME = config.ADMIN_NAME
 
 tournament_trackers = {} # keys are tournament urls, values are tournament tracker objects
 
+log_file = open(config.LOG_NAME, 'w')
+
 slack_client = SlackClient(SLACK_API_TOKEN)
 controller = ChannelController(slack_client)
 
 ### ------ MISCELLANEOUS NECESSARY STUFF ------ ###
 
+def print_to_log(message):
+	print '{}: {}'.format(time.asctime(), message)
+	log_file.write('{}: {}\n'.format(time.asctime(), message))
+
 def get_status_code(host, path="/"):
-    try:
-        conn = httplib.HTTPConnection(host)
-        conn.request("HEAD", path)
-        return conn.getresponse().status
-    except StandardError:
-        traceback.print_exc()
-        return None
-
-def split_into_args(input_str):
-    if not input_str:
-        return []
-
-    current_arg = ''
-    esc_count = 0
-    escaped = False
-
-    for char in input_str:
-        if escaped:
-            current_arg += char
-            escaped = False
-        elif char == '\\':
-            esc_count += 1
-            escaped = True
-        elif char == ' ':
-            break
-        else:
-            current_arg += char
-
-    rest_of_string = input_str[len(current_arg) + 1 + esc_count:]
-
-    arg_list = [current_arg]
-    arg_list.extend(split_into_args(rest_of_string))
-
-    return arg_list
+	try:
+		conn = httplib.HTTPConnection(host)
+		conn.request("HEAD", path)
+		return conn.getresponse().status
+	except StandardError:
+		traceback.print_exc()
+		return None
 
 def tournament_exists(url):
-    if '-' in url:
-        subdomain = '{}.challonge.com'.format(url[:url.find('-')])
-        path = '/{}'.format(url[url.find('-')+1:])
-    else:
-        subdomain = 'challonge.com'
-        path = url
-    return get_status_code(subdomain, path)
+	if '-' in url:
+		subdomain = '{}.challonge.com'.format(url[:url.find('-')])
+		path = '/{}'.format(url[url.find('-')+1:])
+	else:
+		subdomain = 'challonge.com'
+		path = '/{}'.format(url)
+	return get_status_code(subdomain, path) == 200
+
+# splits the input_str by spaces, except when the space is preceded by a backslash
+# essentially implements basic character escaping
+def split_into_args(input_str):
+	if not input_str:
+		return []
+
+	current_arg = ''
+	esc_count = 0
+	escaped = False
+
+	for char in input_str:
+		if escaped:
+			current_arg += char
+			escaped = False
+		elif char == '\\':
+			esc_count += 1
+			escaped = True
+		elif char == ' ':
+			break
+		else:
+			current_arg += char
+
+	rest_of_string = input_str[len(current_arg) + 1 + esc_count:]
+
+	arg_list = [current_arg]
+	arg_list.extend(split_into_args(rest_of_string))
+
+	return arg_list
 
 class TournamentDoesNotExistError(Exception):
 	def __init__(self, value):
@@ -191,7 +201,7 @@ commands = {
 
 # a user entered a command, so we need to execute it
 def execute_command(channel, command, args):
-	print 'Received command: `{}` with args: `{}` in channel with ID {}'.format(command, args, channel)
+	print_to_log('Received command: `{}` with args: `{}` in channel with ID {}'.format(command, args, channel))
 	if command in commands:
 		if len(args) < commands[command]['minargs']:
 			raise TooFewArgsError([channel, command, len(args), commands[command]['minargs']])
@@ -203,9 +213,9 @@ def execute_command(channel, command, args):
 
 ### ------------ MAIN PROGRAM LOOP ------------ ###
 
-print 'Attempting to connect...'
+print_to_log('Attempting to connect...')
 if slack_client.rtm_connect():
-	print 'Connection successful.'
+	print_to_log('Connection successful.')
 	while True:
 		try:
 			# read new messages
@@ -244,7 +254,7 @@ if slack_client.rtm_connect():
 			traceback.print_exc()
 
 		except Exception:
-			print 'Error encountered.'
+			print_to_log('Error encountered.')
 			#slack_client.rtm_send_message(e.value[0], 'Unhandled error occurred... @{}, look at the logs pls.'.format(ADMIN_NAME))
 			traceback.print_exc()
 			break

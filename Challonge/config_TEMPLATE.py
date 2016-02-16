@@ -6,6 +6,8 @@ SLACK_API_TOKEN = 'YOUR_SLACK_API_TOKEN'
 KEYWORD = '!BOTNAME'
 ADMIN_NAME = 'ADMIN'
 
+LOG_NAME = 'LOG_FILE.TXT'
+
 # Save this as `config.py` and replace the placeholders with their actual values.
 
 # The Challonge username is just your Challonge account name.
