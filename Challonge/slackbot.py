@@ -38,6 +38,15 @@ def print_to_log(message):
 	print '{}: {}'.format(time.asctime(), message)
 	log_file.write('{}: {}\n'.format(time.asctime(), message))
 
+def normalize_url(url):
+	if '-' in url:
+		subdomain = '{}.challonge.com'.format(url[:url.find('-')])
+		path = '/{}'.format(url[url.find('-')+1:])
+	else:
+		subdomain = 'challonge.com'
+		path = '/{}'.format(url)
+	return subdomain + path
+
 def get_status_code(host, path="/"):
 	try:
 		conn = httplib.HTTPConnection(host)
@@ -91,6 +100,12 @@ class TournamentDoesNotExistError(Exception):
 	def __str__(self):
 		return repr(self.value)
 
+class TournamentNotTrackedError(Exception):
+	def __init__(self, value):
+		self.value = value
+	def __str__(self):
+		return repr(self.value)
+
 class PlayerNotInTournamentError(Exception):
 	def __init__(self, value):
 		self.value = value
@@ -129,11 +144,14 @@ def history_command(channel, args):
 	tournament_url = args[0]
 	player_name = args[1]
 
+	if tournament_url not in tournament_trackers:
+		raise TournamentNotTrackedError([channel, tournament_url])
+
 	if player_name not in tournament_trackers[tournament_url].get_all_players():
 		raise PlayerNotInTournamentError([channel, [player_name]])
 
 	relevant_matches = tournament_trackers[tournament_url].get_player_matches(player_name)
-	output_message = '```{}\'s history in {}:\n\n'.format(player_name, tournament_url)
+	output_message = '{}\'s history in {}:\n\n```'.format(player_name, normalize_url(tournament_url))
 	output_message += '\n'.join(str(match) for match in relevant_matches)
 
 	if tournament_trackers[tournament_url].get_placing(player_name):
@@ -240,11 +258,15 @@ if slack_client.rtm_connect():
 			for tournament_url in tournament_trackers:
 				new_data = tournament_trackers[tournament_url].pull_matches()
 				if new_data:
-					controller.publish(tournament_url, new_data)
+					controller.publish(normalize_url, tournament_url, new_data)
 
 		except TournamentDoesNotExistError as e:
 			message_slack(e.value[0], "The following tournaments were ignored, because they don't seem to exist:")
 			message_slack(e.value[0], '`{}`'.format(', '.join(e.value[1])))
+			traceback.print_exc()
+
+		except TournamentNotTrackedError as e:
+			message_slack(e.value[0], '{} is not currently tracked. Try `!`20xx track {}`'.format(e.value[1], e.value[1]))
 			traceback.print_exc()
 
 		except PlayerNotInTournamentError as e:
