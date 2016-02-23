@@ -95,28 +95,26 @@ def split_into_args(input_str):
 	return arg_list
 
 class TournamentDoesNotExistError(Exception):
-	def __init__(self, value):
-		self.value = value
-	def __str__(self):
-		return repr(self.value)
+	def __init__(self, channel, tournaments):
+		self.channel = channel
+		self.tournaments = tournaments
 
 class TournamentNotTrackedError(Exception):
-	def __init__(self, value):
-		self.value = value
-	def __str__(self):
-		return repr(self.value)
+	def __init__(self, channel, tournament):
+		self.channel = channel
+		self.tournament = tournament
 
 class PlayerNotInTournamentError(Exception):
-	def __init__(self, value):
-		self.value = value
-	def __str__(self):
-		return repr(self.value)
+	def __init__(self, channel, players):
+		self.channel = channel
+		self.players = players
 
 class TooFewArgsError(Exception):
-	def __init__(self, value):
-		self.value = value
-	def __str__(self):
-		return repr(self.value)
+	def __init__(self, channel, command, args_given, args_reqd):
+		self.channel = channel
+		self.command = command
+		self.args_given = args_given
+		self.args_reqd = args_reqd
 
 ### ----- COMMANDS RECOGNIZED BY SLACKBOT ----- ###
 
@@ -133,22 +131,21 @@ def status_command(channel, args):
 	return output_message + '```'
 
 def details_command(channel, args):
-	output_message = 'Here\'s a list of all the players in `{}` you\'re following: `'.format(args[0])
 	tt = tournament_trackers[args[0]]
-	if not tt.get_followed_players():
-		return 'You are not following any players in `{}`'.format(args[0])
-	output_message += ', '.join('{}'.format(p) for p in tt.get_followed_players())
-	return output_message + '`'
+	output_message = '\nHere\'s a list of all the players in {}:\n```'.format(normalize_url(args[0]))
+	output_message += '\n'.join(map(lambda x: '{}{}'.format(x, ' (followed)' if x in tt.get_followed_players() else ''), tt.get_all_players()))
+	output_message += '```\n'
+	return output_message
 
 def history_command(channel, args):
 	tournament_url = args[0]
 	player_name = args[1]
 
 	if tournament_url not in tournament_trackers:
-		raise TournamentNotTrackedError([channel, tournament_url])
+		raise TournamentNotTrackedError(channel, tournament_url)
 
 	if player_name not in tournament_trackers[tournament_url].get_all_players():
-		raise PlayerNotInTournamentError([channel, [player_name]])
+		raise PlayerNotInTournamentError(channel, [player_name])
 
 	relevant_matches = tournament_trackers[tournament_url].get_player_matches(player_name)
 	output_message = '{}\'s history in {}:\n\n```'.format(player_name, normalize_url(tournament_url))
@@ -175,7 +172,7 @@ def track_command(channel, args):
 				failed.append(tournament_url)
 
 	if failed:
-		raise TournamentDoesNotExistError([channel, failed])
+		raise TournamentDoesNotExistError(channel, failed)
 
 	return 'Started tracking `{}`'.format('`, `'.join(args))
 
@@ -183,7 +180,7 @@ def untrack_command(channel, args):
 	for tournament_url in args:
 		tournament_trackers.pop(tournament_url, None)
 		controller.unsubscribe(channel, tournament_url)
-	return 'No longer tracking `{}`'.format('`, `'.join(args))
+	return 'No longer tracking {}'.format('`, `'.join(args))
 
 def follow_command(channel, args):
 	players_to_follow = args[1:]
@@ -191,7 +188,7 @@ def follow_command(channel, args):
 	failed = []
 
 	if tournament_url not in tournament_trackers:
-		raise TournamentDoesNotExistError([channel, [args[0]]])
+		raise TournamentNotTrackedError(channel, args[0])
 
 	tt = tournament_trackers[tournament_url]
 	for player_name in players_to_follow:
@@ -201,14 +198,14 @@ def follow_command(channel, args):
 			failed.append(player_name)
 
 	if failed:
-		raise PlayerNotInTournamentError([channel, failed])
+		raise PlayerNotInTournamentError(channel, failed)
 
-	return 'Now following `{}` in `{}`!'.format(', '.join('{}'.format(p) for p in players_to_follow), args[0])
+	return 'Now following {} in {}!'.format(', '.join('{}'.format(p) for p in players_to_follow), normalize_url(args[0]))
 
 def unfollow_command(channel, args):
 	players_to_unfollow = args[1:]
 	tournament_trackers[args[0]].unfollow_players(players_to_unfollow)
-	return 'No longer following `{}` in `{}`!'.format(', '.join('{}'.format(p) for p in players_to_unfollow), args[0])
+	return 'No longer following {} in `{}`!'.format(', '.join('{}'.format(p) for p in players_to_unfollow), args[0])
 
 commands = {
 	'help'    : {'function': help_command,     'minargs': 0,  'contract': ''},
@@ -228,7 +225,7 @@ def execute_command(channel, command, args):
 	print_to_log('Received command: `{}` with args: `{}` in channel with ID {}'.format(command, args, channel))
 	if command in commands:
 		if len(args) < commands[command]['minargs']:
-			raise TooFewArgsError([channel, command, len(args), commands[command]['minargs']])
+			raise TooFewArgsError(channel, command, len(args), commands[command]['minargs'])
 		else:
 			output_message = commands[command]['function'](channel, args)
 	else:
@@ -261,31 +258,22 @@ if slack_client.rtm_connect():
 					controller.publish(normalize_url, tournament_url, new_data)
 
 		except TournamentDoesNotExistError as e:
-			message_slack(e.value[0], "The following tournaments were ignored, because they don't seem to exist:")
-			message_slack(e.value[0], '`{}`'.format(', '.join(e.value[1])))
+			message_slack(e.channel, "The following tournaments were ignored, because they don't seem to exist:")
+			message_slack(e.channel, '`{}`'.format(', '.join(e.tournaments)))
 			print_to_log(traceback.format_exc())
 
 		except TournamentNotTrackedError as e:
-			message_slack(e.value[0], '{} is not currently tracked. Try `!`20xx track {}`'.format(e.value[1], e.value[1]))
+			message_slack(e.channel, '{} is not currently tracked. Try `!20xx track {}`'.format(normalize_url(e.tournament), e.tournament))
 			print_to_log(traceback.format_exc())
 
 		except PlayerNotInTournamentError as e:
-			message_slack(e.value[0], "The following players were ignored, because they don't seem to be in the given tournament:")
-			message_slack(e.value[0], '`{}`'.format(', '.join(e.value[1])))
+			message_slack(e.channel, "The following players were ignored, because they don't seem to be in the given tournament:")
+			message_slack(e.channel, '`{}`'.format(', '.join(e.players)))
 			print_to_log(traceback.format_exc())
 
 		except TooFewArgsError as e:
-			command = e.value[1]
-			args_given = e.value[2]
-			args_reqd = e.value[3]
-			error_message = "`{}` requires {} arguments, but only {} given. Enter `{} help` if you're confused.".format(command, args_reqd, args_given, KEYWORD)
-			message_slack(e.value[0], error_message)
-			print_to_log(traceback.format_exc())
-
-		except URLError:
-			print_to_log('Error encountered.')
-			if recent_channel:
-				message_slack(recent_channel, 'A URL error was encountered. Probably something weird happened with Challonge or AWS. Look into it, {}.'.format(ADMIN_NAME))
+			error_message = "`{}` requires {} arguments, but only {} given. Enter `{} help` if you're confused.".format(e.command, e.args_reqd, e.args_given, KEYWORD)
+			message_slack(e.channel, error_message)
 			print_to_log(traceback.format_exc())
 
 		except Exception:
