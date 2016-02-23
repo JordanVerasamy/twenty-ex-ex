@@ -263,16 +263,16 @@ if slack_client.rtm_connect():
 		except TournamentDoesNotExistError as e:
 			message_slack(e.value[0], "The following tournaments were ignored, because they don't seem to exist:")
 			message_slack(e.value[0], '`{}`'.format(', '.join(e.value[1])))
-			traceback.print_exc()
+			print_to_log(traceback.format_exc())
 
 		except TournamentNotTrackedError as e:
 			message_slack(e.value[0], '{} is not currently tracked. Try `!`20xx track {}`'.format(e.value[1], e.value[1]))
-			traceback.print_exc()
+			print_to_log(traceback.format_exc())
 
 		except PlayerNotInTournamentError as e:
 			message_slack(e.value[0], "The following players were ignored, because they don't seem to be in the given tournament:")
 			message_slack(e.value[0], '`{}`'.format(', '.join(e.value[1])))
-			traceback.print_exc()
+			print_to_log(traceback.format_exc())
 
 		except TooFewArgsError as e:
 			command = e.value[1]
@@ -280,13 +280,19 @@ if slack_client.rtm_connect():
 			args_reqd = e.value[3]
 			error_message = "`{}` requires {} arguments, but only {} given. Enter `{} help` if you're confused.".format(command, args_reqd, args_given, KEYWORD)
 			message_slack(e.value[0], error_message)
-			traceback.print_exc()
+			print_to_log(traceback.format_exc())
+
+		except URLError:
+			print_to_log('Error encountered.')
+			if recent_channel:
+				message_slack(recent_channel, 'A URL error was encountered. Probably something weird happened with Challonge or AWS. Look into it, {}.'.format(ADMIN_NAME))
+			print_to_log(traceback.format_exc())
 
 		except Exception:
 			print_to_log('Error encountered.')
 			if recent_channel:
 				message_slack(recent_channel, 'Unhandled error occurred... @{}, look at the logs pls.'.format(ADMIN_NAME))
-			traceback.print_exc()
+			print_to_log(traceback.format_exc())
 			break
 
 		time.sleep(2)
