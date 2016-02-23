@@ -133,7 +133,7 @@ def status_command(channel, args):
 def details_command(channel, args):
 	tt = tournament_trackers[args[0]]
 	output_message = '\nHere\'s a list of all the players in {}:\n```'.format(normalize_url(args[0]))
-	output_message += '\n'.join(map(lambda x: '{}{}'.format(x, ' (followed)' if x in tt.get_followed_players() else ''), tt.get_all_players()))
+	output_message += '\n'.join(map(lambda x: '{}{}{}'.format(x, ' ({})'.format(tt.get_placing(x)) if tt.get_placing(x) else '', ' (followed)' if x in tt.get_followed_players() else ''), tt.get_all_players()))
 	output_message += '```\n'
 	return output_message
 
