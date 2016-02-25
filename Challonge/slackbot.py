@@ -2,6 +2,7 @@ import sys
 import traceback
 import challonge
 import time
+import os
 import config
 import httplib
 
@@ -19,6 +20,8 @@ SLACK_API_TOKEN = config.SLACK_API_TOKEN
 KEYWORD = config.KEYWORD
 ADMIN_NAME = config.ADMIN_NAME
 
+TIMEZONE = config.TIMEZONE
+
 tournament_trackers = {} # keys are tournament urls, values are tournament tracker objects
 
 log_file = open(config.LOG_NAME, 'w')
@@ -35,6 +38,8 @@ def message_slack(channel, message):
 	slack_client.rtm_send_message(channel, message)
 
 def print_to_log(message):
+	os.environ['TZ'] = TIMEZONE
+	time.tzset()
 	print '{}: {}'.format(time.asctime(), message)
 	log_file.write('{}: {}\n'.format(time.asctime(), message))
 
@@ -230,6 +235,7 @@ def execute_command(channel, command, args):
 			output_message = commands[command]['function'](channel, args)
 	else:
 		output_message = 'Couldn\'t recognize your command. Enter `{} help` for more info.'.format(KEYWORD)
+	print_to_log('Sending message {} to channel with ID {}'.format(output_message, channel))
 	message_slack(channel, output_message)
 
 ### ------------ MAIN PROGRAM LOOP ------------ ###
@@ -237,6 +243,7 @@ def execute_command(channel, command, args):
 print_to_log('Attempting to connect...')
 if slack_client.rtm_connect():
 	print_to_log('Connection successful.')
+	counter = 0
 	while True:
 		try:
 			# read new messages
@@ -251,11 +258,14 @@ if slack_client.rtm_connect():
 						recent_channel = channel
 						execute_command(channel, message_body[1], message_body[2:])
 
-			# post updates about tournaments, if necessary
-			for tournament_url in tournament_trackers:
-				new_data = tournament_trackers[tournament_url].pull_matches()
-				if new_data:
-					controller.publish(normalize_url, tournament_url, new_data)
+			# every tenth iteration, post updates about tournaments, if necessary
+			if counter >= 10:
+				counter = 0
+				for tournament_url in tournament_trackers:
+					new_data = tournament_trackers[tournament_url].pull_matches()
+					if new_data:
+						print_to_log('updates about {}! sent them to slack.'.format(new_data))
+						controller.publish(normalize_url, tournament_url, new_data)
 
 		except TournamentDoesNotExistError as e:
 			message_slack(e.channel, "The following tournaments were ignored, because they don't seem to exist:")
@@ -276,6 +286,12 @@ if slack_client.rtm_connect():
 			message_slack(e.channel, error_message)
 			print_to_log(traceback.format_exc())
 
+		except urllib2.URLError, e:
+			print_to_log('URL error encountered.')
+			if recent_channel:
+				message_slack(recent_channel, 'URL error occurred. Something weird with trying to pull from Challonge. Look into it, @{}.'.format(ADMIN_NAME))
+			print_to_log(traceback.format_exc())
+
 		except Exception:
 			print_to_log('Error encountered.')
 			if recent_channel:
@@ -283,6 +299,7 @@ if slack_client.rtm_connect():
 			print_to_log(traceback.format_exc())
 			break
 
-		time.sleep(2)
+		counter += 1
+		time.sleep(0.5)
 else:
 	print 'Connection failed.'
