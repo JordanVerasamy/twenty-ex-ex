@@ -5,6 +5,7 @@ import time
 import os
 import config
 import httplib
+import urllib2
 
 from tournamenttracker import TournamentTracker
 from channelcontroller import ChannelController
