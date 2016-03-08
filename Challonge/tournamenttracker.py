@@ -130,6 +130,9 @@ class TournamentTracker:
 		player_matches = []
 		return filter(lambda match: match.participated(player_name), self.condensed_matches)
 
+	def get_all_matches(self):
+		return self.condensed_matches
+
 	def follow_players(self, *players_to_add):
 		self.followed_players.extend(players_to_add)
 

@@ -6,6 +6,7 @@ import os
 import config
 import httplib
 import urllib2
+import json
 
 from tournamenttracker import TournamentTracker
 from channelcontroller import ChannelController
@@ -188,6 +189,21 @@ def untrack_command(channel, args):
 		controller.unsubscribe(channel, tournament_url)
 	return 'No longer tracking {}'.format('`, `'.join(args))
 
+def jsonify_command(channel, args):
+	for tournament_url in args:
+		tournament_trackers[tournament_url].pull_matches()
+		matches = tournament_trackers[tournament_url].get_all_matches()
+			with open('matchresults_{}.json'.format(tournament_url), 'w') as outfile:
+				for match in matches:
+					if match.round > 0:
+						ccmatch = {'winner': match.winner, 'loser': match.loser}
+						json.dump(ccmatch, outfile)
+				for match in matches:
+					if match.round < 0:
+						ccmatch = {'winner': match.winner, 'loser': match.loser}
+						json.dump(ccmatch, outfile)
+	return 'Successfully jsonified!'
+
 def follow_command(channel, args):
 	players_to_follow = args[1:]
 	tournament_url = args[0]
@@ -218,6 +234,7 @@ commands = {
 	'status'  : {'function': status_command,   'minargs': 0,  'contract': ''},
 	'track'   : {'function': track_command,    'minargs': 1,  'contract': '<CHALLONGE_TOURNAMENT_URL>+'},
 	'untrack' : {'function': untrack_command,  'minargs': 1,  'contract': '<CHALLONGE_TOURNAMENT_URL>+'},
+	'jsonify' : {'function': jsonify_command,  'minargs': 1,  'contract': '<CHALLONGE_TOURNAMENT_URL>+'},
 	'follow'  : {'function': follow_command,   'minargs': 2,  'contract': '<CHALLONGE_TOURNAMENT_URL> <PLAYER_ID>+'},
 	'unfollow': {'function': unfollow_command, 'minargs': 2,  'contract': '<CHALLONGE_TOURNAMENT_URL> <PLAYER_ID>+'},
 	'details' : {'function': details_command,  'minargs': 1,  'contract': '<CHALLONGE_TOURNAMENT_URL>'},
