@@ -193,15 +193,15 @@ def jsonify_command(channel, args):
 	for tournament_url in args:
 		tournament_trackers[tournament_url].pull_matches()
 		matches = tournament_trackers[tournament_url].get_all_matches()
-			with open('matchresults_{}.json'.format(tournament_url), 'w') as outfile:
-				for match in matches:
-					if match.round > 0:
-						ccmatch = {'winner': match.winner, 'loser': match.loser}
-						json.dump(ccmatch, outfile)
-				for match in matches:
-					if match.round < 0:
-						ccmatch = {'winner': match.winner, 'loser': match.loser}
-						json.dump(ccmatch, outfile)
+		with open('matchresults_{}.json'.format(tournament_url), 'w') as outfile:
+			for match in matches:
+				if match.round > 0:
+					ccmatch = {'winner': match.winner, 'loser': match.loser}
+					json.dump(ccmatch, outfile)
+			for match in matches:
+				if match.round < 0:
+					ccmatch = {'winner': match.winner, 'loser': match.loser}
+					json.dump(ccmatch, outfile)
 	return 'Successfully jsonified!'
 
 def follow_command(channel, args):
