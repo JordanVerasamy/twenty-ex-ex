@@ -59,12 +59,11 @@ def round_to_placing(round, player_count):
 
 class TournamentTracker:
 
-	def __init__(self, username, tournament_url, api_key, channel):
+	def __init__(self, username, tournament_url, api_key):
 
 		self.username = username
 		self.tournament_url = tournament_url
 		self.api_key = api_key
-		self.channel = channel
 
 		self.condensed_matches = []
 

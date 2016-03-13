@@ -173,7 +173,7 @@ def track_command(channel, args):
 			controller.subscribe(channel, tournament_url)
 		else:
 			if tournament_exists(tournament_url):
-				tournament_trackers[tournament_url] = TournamentTracker(CHALLONGE_USERNAME, tournament_url, CHALLONGE_API_KEY, channel)
+				tournament_trackers[tournament_url] = TournamentTracker(CHALLONGE_USERNAME, tournament_url, CHALLONGE_API_KEY)
 				controller.subscribe(channel, tournament_url)
 			else:
 				failed.append(tournament_url)
@@ -193,15 +193,17 @@ def jsonify_command(channel, args):
 	for tournament_url in args:
 		tournament_trackers[tournament_url].pull_matches()
 		matches = tournament_trackers[tournament_url].get_all_matches()
+		results = []
+		for match in matches:
+			if match.round > 0:
+				ccmatch = {'winner': match.winner, 'loser': match.loser}
+				results.append(ccmatch)
+		for match in matches:
+			if match.round < 0:
+				ccmatch = {'winner': match.winner, 'loser': match.loser}
+				results.append(ccmatch)
 		with open('matchresults_{}.json'.format(tournament_url), 'w') as outfile:
-			for match in matches:
-				if match.round > 0:
-					ccmatch = {'winner': match.winner, 'loser': match.loser}
-					json.dump(ccmatch, outfile)
-			for match in matches:
-				if match.round < 0:
-					ccmatch = {'winner': match.winner, 'loser': match.loser}
-					json.dump(ccmatch, outfile)
+			json.dump(results, outfile)
 	return 'Successfully jsonified!'
 
 def follow_command(channel, args):
