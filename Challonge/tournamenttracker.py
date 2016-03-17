@@ -2,10 +2,12 @@ import challonge
 
 class CondensedMatch:
 
-	def __init__(self, winner, loser, rnd):
+	def __init__(self, winner, loser, rnd, winner_score, loser_score):
 		self.winner = winner
 		self.loser = loser
 		self.round = rnd
+		self.winner_score = min(3, winner_score)
+		self.loser_score = max(0, loser_score)
 
 	def __eq__(self, other):
 		if isinstance(other, self.__class__):
@@ -18,7 +20,7 @@ class CondensedMatch:
 
 	def __str__(self):
 		bracket = 'loser\'s' if self.round < 0 else 'winner\'s'
-		return '{} defeated {} in {} round {}'.format(self.winner, self.loser, bracket, abs(self.round))
+		return '{} defeated {} {}-{} in {} round {}'.format(self.winner, self.loser, self.winner_score, self.loser_score, bracket, abs(self.round))
 
 	def participated(self, player_name):
 		return self.winner == player_name or self.loser == player_name
@@ -56,6 +58,21 @@ def round_to_placing(round, player_count):
 		suffix = str(suffixes[last_digit])
 
 	return '{}{}'.format(str(placing), suffix)
+
+def get_scores(score_string):
+	score_list = score_string.split('-')
+	negative = False
+	scores = []
+	for i in score_list:
+		if i == '':
+			negative = True
+		else:
+			if negative:
+				scores.append(-int(i))
+			else:
+				scores.append(int(i))
+			negative = False
+	return scores
 
 class TournamentTracker:
 
@@ -97,10 +114,16 @@ class TournamentTracker:
 		for match in match_list:
 			if match['state'] == 'complete':
 
+				scores = get_scores(match['scores-csv'])
+				winner_score = max(scores)
+				loser_score = min(scores)
+
 				condensed_match = CondensedMatch(
 					self.participant_ids[match['winner-id']],
 					self.participant_ids[match['loser-id']],
-					match['round'])
+					match['round'],
+					winner_score,
+					loser_score)
 
 				if condensed_match not in self.condensed_matches:
 

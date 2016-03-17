@@ -10,13 +10,13 @@ CHALLONGE_USERNAME = config.CHALLONGE_USERNAME
 CHALLONGE_API_KEY = config.CHALLONGE_API_KEY
 
 # The higher the K-factor, the more drastically ratings change after every individual match.
-K_FACTOR = 15
+K_FACTOR = 50
 
 # The number of times the program repeats every tournament.
-ITERATIONS = 100
+ITERATIONS = 400
 
 # Any gap between player ratings that is higher than this threshold marks a new tier.
-TIER_THRESHOLD = 45
+TIER_THRESHOLD = 30
 
 # The elo that a new player starts at before their first game.
 STARTING_ELO = 1200
@@ -27,10 +27,10 @@ tournament_urls = [
 	'uwsmashclub-UWMelee25',
 	'uwsmashclub-UWmelee26',
 	'uwsmashclub-UWmelee27',
-	'Crossroads2',
-	'Crossroads3',
+	#'Crossroads2',
+	#'Crossroads3',
 	'uwsmashclub-UWmelee28',
-	'uwsmashclub-UWArcadian3'
+	#'uwsmashclub-UWArcadian3'
 ]
 
 with open('alt_tags.json', 'r') as data_file:
@@ -47,8 +47,12 @@ ratings = {}
 # consumes ratings of both players, outputs the amount that the winner's
 # elo should increase and the loser's should decrease
 
-def get_delta_elo(winner_rating, loser_rating):
-	return K_FACTOR / (1 + 10 ** ((winner_rating - loser_rating)/400))
+def get_expected_score(player_rating, opponent_rating):
+	return 1 / (1 + 10 ** ((opponent_rating - player_rating)/400))
+
+def get_updated_elo(player_rating, opponent_rating, score):
+	expected_score = get_expected_score(player_rating, opponent_rating)
+	return player_rating + K_FACTOR * (score - expected_score)
 
 ### ------------------------------------------- ###
 
@@ -104,25 +108,36 @@ for _ in range(ITERATIONS):
 		for match in matches:
 			# Get tags of both players in the current match, calculate how much elo
 			# should change hands, then add or deduct as necessary.
+			if match.winner_score == match.loser_score: # i.e. if someone was DQ'd or absent
+				continue
 			if match.winner in ignored or match.loser in ignored:
 				continue
+
 			winner = get_real_tag(match.winner)
 			loser = get_real_tag(match.loser)
-			delta_elo = get_delta_elo(ratings[winner], ratings[loser])
-			ratings[winner] += delta_elo
-			ratings[loser] -= delta_elo
+			score = match.winner_score / float((match.winner_score + match.loser_score))
+
+			winner_rating = ratings[winner]
+			loser_rating = ratings[loser]
+
+			ratings[winner] = get_updated_elo(winner_rating, loser_rating, score)
+			ratings[loser] = get_updated_elo(loser_rating, winner_rating,  1 - score)
 
 count = 1
 last = -1
 
-# iterate through all players, sorted by rating
-for player in sorted(ratings, key=ratings.get, reverse=True):
+with open('players.txt', 'w') as outfile:
 
-	# If there's a big gap between the last player and this player, mark the
-	# beginning of a new tier. Either way, output their rankings, elo scores, and tags
-	if last - ratings[player] > TIER_THRESHOLD:
-		print '---'
-	print '{r:3.0f}:  {s:4.0f}  {p}'.format(r=count, s=ratings[player], p=player)
+	# iterate through all players, sorted by rating
+	for player in sorted(ratings, key=ratings.get, reverse=True):
 
-	last = ratings[player]
-	count += 1
+		# If there's a big gap between the last player and this player, mark the
+		# beginning of a new tier. Either way, output their rankings, elo scores, and tags
+		if last - ratings[player] > TIER_THRESHOLD:
+			outfile.write('---\n')
+		outfile.write('{r:3.0f}:  {s:4.0f}  {p}\n'.format(r=count, s=ratings[player], p=player))
+
+		last = ratings[player]
+		count += 1
+
+print '\nfully discombobulated!'
