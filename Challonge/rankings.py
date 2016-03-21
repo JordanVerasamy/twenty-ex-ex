@@ -40,6 +40,8 @@ with open('ignore.json', 'r') as data_file:
 	ignored = json.load(data_file)
 
 tournament_trackers = map(lambda x: TournamentTracker(CHALLONGE_USERNAME, x, CHALLONGE_API_KEY), tournament_urls)
+
+names = []
 ratings = {}
 
 ### ------------------------------------------- ###
@@ -72,13 +74,12 @@ def get_real_tag(tag):
 			return player
 		if base_tag in map(lambda x: x.lower().replace(' ', ''), alt_tags[player]):
 			return player
-	for player in ratings:
+	for player in names:
 		if base_tag == player.lower().replace(' ', ''):
 			return player
 	return re.sub('\(\w*\)', '', tag[tag.find('|')+1:].replace(' ', ''))
 
 ### ------------------------------------------- ###
-
 
 # Pull all match data from Challonge for all tournaments in `tournament_urls`.
 # (See the TournamentTracker class for details)
@@ -87,9 +88,6 @@ for tt in tournament_trackers:
 	tt.pull_matches()
 
 for _ in range(ITERATIONS):
-
-	# Every iteration, go through tournaments in a random order
-	random.shuffle(tournament_trackers)
 
 	for tt in tournament_trackers:
 		print 'discombobulating using {u:25s}\'s gammas...'.format(u=tt.tournament_url)
@@ -100,6 +98,8 @@ for _ in range(ITERATIONS):
 			player = get_real_tag(tag)
 			if player not in ratings and player not in ignored:
 				ratings[player] = STARTING_ELO
+			if player not in names and player not in ignored:
+				names.append(player)
 
 		# Get a list of all matches from the tournament (we already pulled this from Challonge)
 		matches = tt.get_all_matches()
@@ -122,6 +122,9 @@ for _ in range(ITERATIONS):
 
 			ratings[winner] = get_updated_elo(winner_rating, loser_rating, score)
 			ratings[loser] = get_updated_elo(loser_rating, winner_rating,  1 - score)
+
+		# Every iteration after the first, go through tournaments in a random order
+		random.shuffle(tournament_trackers)
 
 count = 1
 last = -1
