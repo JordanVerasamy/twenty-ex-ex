@@ -13,24 +13,26 @@ CHALLONGE_API_KEY = config.CHALLONGE_API_KEY
 K_FACTOR = 50
 
 # The number of times the program repeats every tournament.
-ITERATIONS = 400
+ITERATIONS = 200
+SUPER_ITERATIONS = 80
 
 # Any gap between player ratings that is higher than this threshold marks a new tier.
-TIER_THRESHOLD = 30
+TIER_THRESHOLD = 3000
 
 # The elo that a new player starts at before their first game.
 STARTING_ELO = 1200
 
+OUTPUT_FILE = 'players.txt'
 ### ------------------------------------------- ###
 
 tournament_urls = [
 	'uwsmashclub-UWMelee25',
 	'uwsmashclub-UWmelee26',
 	'uwsmashclub-UWmelee27',
-	#'Crossroads2',
-	#'Crossroads3',
+	'Crossroads2',
+	'Crossroads3',
 	'uwsmashclub-UWmelee28',
-	#'uwsmashclub-UWArcadian3'
+	'uwsmashclub-UWArcadian3'
 ]
 
 with open('alt_tags.json', 'r') as data_file:
@@ -40,7 +42,8 @@ with open('ignore.json', 'r') as data_file:
 	ignored = json.load(data_file)
 
 tournament_trackers = map(lambda x: TournamentTracker(CHALLONGE_USERNAME, x, CHALLONGE_API_KEY), tournament_urls)
-ratings = {}
+
+names = []
 
 ### ------------------------------------------- ###
 
@@ -72,13 +75,73 @@ def get_real_tag(tag):
 			return player
 		if base_tag in map(lambda x: x.lower().replace(' ', ''), alt_tags[player]):
 			return player
-	for player in ratings:
+	for player in names:
 		if base_tag == player.lower().replace(' ', ''):
 			return player
 	return re.sub('\(\w*\)', '', tag[tag.find('|')+1:].replace(' ', ''))
 
 ### ------------------------------------------- ###
 
+def compute_ratings(tournament_trackers):
+	ratings = {}
+
+	for _ in xrange(ITERATIONS):
+
+		for tt in tournament_trackers:
+
+			#print 'discombobulating using {u:25s}\'s gammas...'.format(u=tt.tournament_url)
+
+			# Go through all players in the current tournament, assign them
+			# 1200 elo if we don't have any data on them already
+			for tag in tt.get_all_players():
+				player = get_real_tag(tag)
+				if player not in ratings and player not in ignored:
+					ratings[player] = STARTING_ELO
+				if player not in names and player not in ignored:
+					names.append(player)
+
+			# Get a list of all matches from the tournament (we already pulled this from Challonge)
+			matches = tt.get_all_matches()
+			random.shuffle(matches)
+
+			for match in matches:
+				# Get tags of both players in the current match, calculate how much elo
+				# should change hands, then add or deduct as necessary.
+				if match.winner_score == match.loser_score: # i.e. if someone was DQ'd or absent
+					continue
+				if match.winner in ignored or match.loser in ignored:
+					continue
+
+				winner = get_real_tag(match.winner)
+				loser = get_real_tag(match.loser)
+				score = match.winner_score / float((match.winner_score + match.loser_score))
+
+				winner_rating = ratings[winner]
+				loser_rating = ratings[loser]
+
+				ratings[winner] = get_updated_elo(winner_rating, loser_rating, score)
+				ratings[loser] = get_updated_elo(loser_rating, winner_rating,  1 - score)
+
+			# Every iteration after the first, go through tournaments in a random order
+			random.shuffle(tournament_trackers)
+
+	return ratings
+
+### ------------------------------------------- ###
+
+def combine_ratings(ratings_list):
+	ret = {}
+	for ratings in ratings_list:
+		for player in ratings:
+			if player in ret:
+				ret[player] += ratings[player]
+			else:
+				ret[player] = 0
+	for player in ret:
+		ret[player] /= len(ratings_list)
+	return ret
+
+### ------------------------------------------- ###
 
 # Pull all match data from Challonge for all tournaments in `tournament_urls`.
 # (See the TournamentTracker class for details)
@@ -86,47 +149,19 @@ for tt in tournament_trackers:
 	print 'pulling... {}'.format(tt.tournament_url)
 	tt.pull_matches()
 
-for _ in range(ITERATIONS):
+ratings_list = []
 
-	# Every iteration, go through tournaments in a random order
-	random.shuffle(tournament_trackers)
+for i in xrange(SUPER_ITERATIONS):
+	ratings_list.append(compute_ratings(tournament_trackers))
+	print i
 
-	for tt in tournament_trackers:
-		print 'discombobulating using {u:25s}\'s gammas...'.format(u=tt.tournament_url)
-
-		# Go through all players in the current tournament, assign them
-		# 1200 elo if we don't have any data on them already
-		for tag in tt.get_all_players():
-			player = get_real_tag(tag)
-			if player not in ratings and player not in ignored:
-				ratings[player] = STARTING_ELO
-
-		# Get a list of all matches from the tournament (we already pulled this from Challonge)
-		matches = tt.get_all_matches()
-		random.shuffle(matches)
-
-		for match in matches:
-			# Get tags of both players in the current match, calculate how much elo
-			# should change hands, then add or deduct as necessary.
-			if match.winner_score == match.loser_score: # i.e. if someone was DQ'd or absent
-				continue
-			if match.winner in ignored or match.loser in ignored:
-				continue
-
-			winner = get_real_tag(match.winner)
-			loser = get_real_tag(match.loser)
-			score = match.winner_score / float((match.winner_score + match.loser_score))
-
-			winner_rating = ratings[winner]
-			loser_rating = ratings[loser]
-
-			ratings[winner] = get_updated_elo(winner_rating, loser_rating, score)
-			ratings[loser] = get_updated_elo(loser_rating, winner_rating,  1 - score)
+ratings = combine_ratings(ratings_list)
 
 count = 1
 last = -1
 
-with open('players.txt', 'w') as outfile:
+with open(OUTPUT_FILE, 'w') as outfile:
+	outfile.write(str(len(ratings_list))+'\n')
 
 	# iterate through all players, sorted by rating
 	for player in sorted(ratings, key=ratings.get, reverse=True):
