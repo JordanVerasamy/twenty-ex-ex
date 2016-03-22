@@ -10,20 +10,21 @@ CHALLONGE_USERNAME = config.CHALLONGE_USERNAME
 CHALLONGE_API_KEY = config.CHALLONGE_API_KEY
 
 # The higher the K-factor, the more drastically ratings change after every individual match.
-K_FACTOR = 50
+K_FACTOR = 10
 
 # The number of times the program repeats every tournament.
-ITERATIONS = 200
-SUPER_ITERATIONS = 80
+ITERATIONS = 500
+
+# The number of times the program repeats the entire process
+SUPER_ITERATIONS = 300
 
 # Any gap between player ratings that is higher than this threshold marks a new tier.
-TIER_THRESHOLD = 3000
+TIER_THRESHOLD = 35
 
 # The elo that a new player starts at before their first game.
 STARTING_ELO = 1200
 
 OUTPUT_FILE = 'players.txt'
-### ------------------------------------------- ###
 
 tournament_urls = [
 	'uwsmashclub-UWMelee25',
@@ -31,8 +32,11 @@ tournament_urls = [
 	'uwsmashclub-UWmelee27',
 	'Crossroads2',
 	'Crossroads3',
-	'uwsmashclub-UWmelee28',
-	'uwsmashclub-UWArcadian3'
+	'uwsmashclub-UWmelee28'
+]
+
+new_tournaments = [
+	'Crossroads4'
 ]
 
 with open('alt_tags.json', 'r') as data_file:
@@ -42,6 +46,7 @@ with open('ignore.json', 'r') as data_file:
 	ignored = json.load(data_file)
 
 tournament_trackers = map(lambda x: TournamentTracker(CHALLONGE_USERNAME, x, CHALLONGE_API_KEY), tournament_urls)
+new_tts = map(lambda x: TournamentTracker(CHALLONGE_USERNAME, x, CHALLONGE_API_KEY), new_tournaments)
 
 names = []
 
@@ -82,7 +87,7 @@ def get_real_tag(tag):
 
 ### ------------------------------------------- ###
 
-def compute_ratings(tournament_trackers):
+def compute_single_ratings(tournament_trackers):
 	ratings = {}
 
 	for _ in xrange(ITERATIONS):
@@ -136,32 +141,62 @@ def combine_ratings(ratings_list):
 			if player in ret:
 				ret[player] += ratings[player]
 			else:
-				ret[player] = 0
+				ret[player] = ratings[player]
 	for player in ret:
 		ret[player] /= len(ratings_list)
 	return ret
 
 ### ------------------------------------------- ###
 
+def compute_aggregate_ratings(tournament_trackers):
+	ratings_list = []
+
+	for i in xrange(SUPER_ITERATIONS):
+		ratings_list.append(compute_single_ratings(tournament_trackers))
+		print 'completed superiteration {}...'.format(i)
+
+	return combine_ratings(ratings_list)
+
+### ------------------------------------------- ###
+
+def get_movement(old_ratings, ratings):
+	movement = {}
+
+	for player in names:
+		if player not in old_ratings:
+			movement[player] = 'NEW'
+			continue
+		difference = ratings[player] - old_ratings[player]
+		if abs(difference) <= 10:
+			movement[player] = '   '
+		elif difference > 40:
+			movement[player] = '+++'
+		elif difference < -40:
+			movement[player] = '---'
+		elif difference > 10:
+			movement[player] = ' + '
+		elif difference < -10:
+			movement[player] = ' - '
+
+	return movement
+
+### ------------------------------------------- ###
+
 # Pull all match data from Challonge for all tournaments in `tournament_urls`.
 # (See the TournamentTracker class for details)
-for tt in tournament_trackers:
+for tt in tournament_trackers + new_tts:
 	print 'pulling... {}'.format(tt.tournament_url)
 	tt.pull_matches()
 
-ratings_list = []
+old_ratings = compute_aggregate_ratings(tournament_trackers)
+ratings = compute_aggregate_ratings(tournament_trackers + new_tts)
 
-for i in xrange(SUPER_ITERATIONS):
-	ratings_list.append(compute_ratings(tournament_trackers))
-	print i
-
-ratings = combine_ratings(ratings_list)
+movement = get_movement(old_ratings, ratings)
 
 count = 1
 last = -1
 
 with open(OUTPUT_FILE, 'w') as outfile:
-	outfile.write(str(len(ratings_list))+'\n')
 
 	# iterate through all players, sorted by rating
 	for player in sorted(ratings, key=ratings.get, reverse=True):
@@ -170,7 +205,7 @@ with open(OUTPUT_FILE, 'w') as outfile:
 		# beginning of a new tier. Either way, output their rankings, elo scores, and tags
 		if last - ratings[player] > TIER_THRESHOLD:
 			outfile.write('---\n')
-		outfile.write('{r:3.0f}:  {s:4.0f}  {p}\n'.format(r=count, s=ratings[player], p=player))
+		outfile.write('{r:3.0f}:  {s:4.0f}  {m}  {p}\n'.format(r=count, s=ratings[player], m=movement[player], p=player))
 
 		last = ratings[player]
 		count += 1
