@@ -11,23 +11,25 @@
 	],
 	"GarbagePrince" : [
 		"GarbageLord",
-		"GarbageWarriorSupreme"
+		"GarbageWarriorSupreme",
+		"UltimateGarbage"
 	],
 	"Eidolon" : [
 		"Eidolm@ster"
 	],
 	"G Pipes" : [
-		"Gpipes",
 		"Jee Pipes",
 		"G Debt"
 	],
 	"lonebutterfish" : [
 		"Mike Oxwelling",
 		"Haxfn$",
-		"Dixon Cider"
+		"Dixon Cider",
+		"DrunkFox"
 	],
 	"RageCage" : [
-		"Despite all my Rage I am Still Just a Rat in the Cage"
+		"Despite all my Rage I am Still Just a Rat in the Cage",
+		"SSJLinkMain"
 	],
 	"Wakening" : [
 		"Wakeningg"
@@ -39,7 +41,8 @@
 		"Jason \"LetsDuet\" Young"
 	],
 	"Phlow" : [
-		"Flow"
+		"Flow",
+		"Phlo"
 	],
 	"FUTANARI IDOL" : [
 		"placeholder for andrew's dumbass tag",
@@ -69,10 +72,27 @@
 	],
 	"Drolian" : [
 		"Ultralight Beam",
-		"Jenny's BMW",
-		"LinkXBowserPro98"
+		"Jenny's BMW"
 	],
 	"DiscoWinter" : [
-		"Disco"
+		"Disco",
+		"CWK"
+	],
+	"Drolian's Secondaries" : [
+		"LinkXBowserPro98",
+		"GreenGoblin"
+	],
+	"FUTANARI IDOL's Secondaries" : [
+		"inseki",
+		"nakadashi"
+	],
+	"EWC's Secondaries" : [
+		"SomeStPattysDayPun"
+	],
+	"The Engineer's Secondaries" : [
+		"GreenPeachLegend"
+	],
+	"lonebutterfish's Secondaries" : [
+		"LoneMarioBlooper"
 	]
 }
