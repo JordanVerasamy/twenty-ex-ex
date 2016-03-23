@@ -1,0 +1,118 @@
+  1:  2259   +   Dshi
+---
+  2:  2127       Windrose
+  3:  2099       FUTANARI IDOL
+---
+  4:  2004       Cyan
+  5:  2002   +   GarbagePrince
+  6:  1995   +   Keatsta
+  7:  1991   +   lonebutterfish
+  8:  1971  NEW  EWC's Secondaries
+  9:  1965       Rabbit
+---
+ 10:  1921  NEW  APRenekton
+ 11:  1911   +   Shio
+ 12:  1892   -   EWC
+ 13:  1885   +   FUTANARI IDOL's Secondaries
+ 14:  1878       Drolian
+ 15:  1853       Delta
+ 16:  1850   +   Dr. Shotz
+ 17:  1843  ---  Drolian's Secondaries
+ 18:  1835   +   Simba
+ 19:  1812   -   Gerb
+ 20:  1797   +   lonebutterfish's Secondaries
+---
+ 21:  1710       Eon
+ 22:  1699   -   Eidolon
+ 23:  1696       KrispySmooth
+ 24:  1661   +   OT Eric
+ 25:  1654   -   Freedom
+ 26:  1635       Ursi
+ 27:  1622       MurphyPrime
+ 28:  1606       G Pipes
+ 29:  1603       Nigrescent
+ 30:  1599       Love
+ 31:  1593       IceBallz
+---
+ 32:  1535       Crimson
+ 33:  1526   -   Mosh
+ 34:  1521   +   Root
+ 35:  1500       Juice
+ 36:  1497       Future
+ 37:  1478  NEW  HatCrab
+ 38:  1463   +   DiscoWinter
+ 39:  1460   +   Tungsten
+ 40:  1458   -   Fringent
+ 41:  1450  +++  Life
+---
+ 42:  1404  ---  Pokno
+---
+ 43:  1365  ---  Barrage
+ 44:  1338   +   CrimsonFalcon
+ 45:  1318  NEW  ClassicMitch
+---
+ 46:  1281  NEW  The Engineer's Secondaries
+ 47:  1272       Wakening
+ 48:  1267   +   JusttheTipper
+ 49:  1266       Sith
+ 50:  1238   -   HK
+ 51:  1238  +++  Bahlakay
+ 52:  1220       LetsDuet
+ 53:  1196  ---  2%
+ 54:  1172   -   Smoyd
+ 55:  1164   -   Jop
+ 56:  1157  NEW  JiveTurkey
+ 57:  1152   +   Chris
+---
+ 58:  1064   -   YYZ
+ 59:  1062       Poundcake
+ 60:  1031       Papay
+ 61:  1026  ---  RageCage
+---
+ 62:   981   +   G.O.P.
+ 63:   948  ---  Yimpy
+ 64:   941  ---  Noobletz
+ 65:   917   -   Phlow
+---
+ 66:   869       Total
+ 67:   860  ---  Mantou
+ 68:   849   -   Mosh'sFalco
+ 69:   835  ---  Pomfkimochi
+ 70:   828       Smough
+ 71:   813       Kiwi
+ 72:   807   -   Cecil
+ 73:   776  ---  UMR
+ 74:   776  NEW  AriesNova
+ 75:   758       CVWAUW
+ 76:   748   -   MoonRobin
+ 77:   743   +   Lockirby
+ 78:   729   +   Joe
+ 79:   703   +   M&M
+ 80:   703   +   Q
+ 81:   691       NaCl
+ 82:   671   -   RationalPie
+---
+ 83:   627   -   WinterSea
+ 84:   621  NEW  Jesus
+ 85:   619       Lamps
+ 86:   618       Aveeno
+ 87:   586       Jo
+ 88:   578       Strawberry
+ 89:   578       Nay
+ 90:   569   +   Jacob
+ 91:   565   -   Cos
+ 92:   561       Javqa
+---
+ 93:   519   -   USSR
+ 94:   509   -   Jing
+ 95:   509   -   Dak
+ 96:   488  ---  shadowslippy
+ 97:   481  ---  Ravioli
+ 98:   479   +   Tfolk
+ 99:   463       David
+100:   456   +   _espo
+101:   449  ---  zoonie
+---
+102:   301  ---  Pika
+---
+103:   140  ---  Norman
