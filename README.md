@@ -10,7 +10,7 @@ The UW Smash Club community wanted a way to track players' skill against each ot
 
 ### 2. Provide live updates on tournaments in Slack.
 
-During UW Smash Club weeklies, those of us who aren't attending might want to keep track of how their friends are doing in the tournament, without having to constantly refresh the Challonge page. This tool will provides a [bot user](https://api.slack.com/bot-users) (built with the [Slack Real Time Messaging API)[https://api.slack.com/rtm]) to post updates about your friends' results weeklies as soon as they happen, so you'll never be out of the loop. Eventually, it could be extended to work for pro tournaments as well.
+During UW Smash Club weeklies, those of us who aren't attending might want to keep track of how their friends are doing in the tournament, without having to constantly refresh the Challonge page. This tool provides a [bot user](https://api.slack.com/bot-users) (built with the [Slack Real Time Messaging API](https://api.slack.com/rtm)) to post updates about your friends' results weeklies as soon as they happen, so you'll never be out of the loop. Eventually, it could be extended to work for pro tournaments as well.
 
 ### 3. Make fantasy drafting way easier.
 
