@@ -13,10 +13,10 @@ CHALLONGE_API_KEY = config.CHALLONGE_API_KEY
 K_FACTOR = 10
 
 # The number of times the program repeats every tournament.
-ITERATIONS = 500
+ITERATIONS = 150
 
 # The number of times the program repeats the entire process
-SUPER_ITERATIONS = 300
+SUPER_ITERATIONS = 100
 
 # Any gap between player ratings that is higher than this threshold marks a new tier.
 TIER_THRESHOLD = 35
@@ -24,7 +24,7 @@ TIER_THRESHOLD = 35
 # The elo that a new player starts at before their first game.
 STARTING_ELO = 1200
 
-OUTPUT_FILE = 'players.txt'
+OUTPUT_FILE = 'players_new_movement.txt'
 
 tournament_urls = [
 	'uwsmashclub-UWMelee25',
@@ -161,21 +161,26 @@ def compute_aggregate_ratings(tournament_trackers):
 
 def get_movement(old_ratings, ratings):
 	movement = {}
+	adj = 0
 
-	for player in names:
+	old_rankings = sorted(old_ratings, key=old_ratings.get, reverse=True)
+	rankings = sorted(ratings, key=ratings.get, reverse=True)
+
+	for player in rankings:
 		if player not in old_ratings:
 			movement[player] = 'NEW'
+			adj += 1
 			continue
-		difference = ratings[player] - old_ratings[player]
-		if abs(difference) <= 10:
+		difference = old_rankings.index(player) + adj - rankings.index(player)
+		if abs(difference) <= 1:
 			movement[player] = '   '
-		elif difference > 40:
+		elif difference > 4:
 			movement[player] = '+++'
-		elif difference < -40:
+		elif difference < -4:
 			movement[player] = '---'
-		elif difference > 10:
+		elif difference > 1:
 			movement[player] = ' + '
-		elif difference < -10:
+		elif difference < -1:
 			movement[player] = ' - '
 
 	return movement
@@ -189,9 +194,13 @@ for tt in tournament_trackers + new_tts:
 	tt.pull_matches()
 
 old_ratings = compute_aggregate_ratings(tournament_trackers)
-ratings = compute_aggregate_ratings(tournament_trackers + new_tts)
 
-movement = get_movement(old_ratings, ratings)
+if new_tts:
+	ratings = compute_aggregate_ratings(tournament_trackers + new_tts)
+	movement = get_movement(old_ratings, ratings)
+else:
+	ratings = old_ratings
+	movement = False
 
 count = 1
 last = -1
@@ -205,7 +214,11 @@ with open(OUTPUT_FILE, 'w') as outfile:
 		# beginning of a new tier. Either way, output their rankings, elo scores, and tags
 		if last - ratings[player] > TIER_THRESHOLD:
 			outfile.write('---\n')
-		outfile.write('{r:3.0f}:  {s:4.0f}  {m}  {p}\n'.format(r=count, s=ratings[player], m=movement[player], p=player))
+
+		if movement:
+			outfile.write('{r:3.0f}:  {s:4.0f}  {m}  {p}\n'.format(r=count, s=ratings[player], m=movement[player], p=player))
+		else:
+			outfile.write('{r:3.0f}:  {s:4.0f}       {p}\n'.format(r=count, s=ratings[player], p=player))
 
 		last = ratings[player]
 		count += 1
