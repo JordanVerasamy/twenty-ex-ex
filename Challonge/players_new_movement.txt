@@ -1,114 +1,90 @@
-  1:  2113       Dshi
+  1:  1500       GarbagePrince
+  2:  1494       FUTANARI IDOL
 ---
-  2:  1991       Windrose
-  3:  1971       FUTANARI IDOL
+  3:  1457       Rabbit
 ---
-  4:  1879       GarbagePrince
-  5:  1875       Cyan
-  6:  1868       lonebutterfish
-  7:  1850       Keatsta
-  8:  1843   -   Rabbit
-  9:  1820  NEW  EWC's Secondaries
----
- 10:  1782  NEW  APRenekton
- 11:  1761       EWC
- 12:  1756  +++  FUTANARI IDOL's Secondaries
- 13:  1755       Shio
- 14:  1754       Drolian
- 15:  1728   +   Dr. Shotz
- 16:  1724       Delta
- 17:  1710   +   Simba
- 18:  1709  ---  Drolian's Secondaries
- 19:  1690   -   Gerb
- 20:  1669       lonebutterfish's Secondaries
----
- 21:  1594   +   Eon
- 22:  1582       KrispySmooth
- 23:  1582   -   Eidolon
- 24:  1554       OT Eric
- 25:  1542       Freedom
- 26:  1522       Ursi
- 27:  1512       MurphyPrime
- 28:  1508       Love
- 29:  1498       G Pipes
- 30:  1487       Nigrescent
- 31:  1484       IceBallz
----
- 32:  1433   +   Root
- 33:  1432       Crimson
- 34:  1424   -   Mosh
- 35:  1416       Juice
- 36:  1387       Future
- 37:  1370       DiscoWinter
- 38:  1358   +   Life
- 39:  1350  NEW  HatCrab
- 40:  1349   -   Fringent
- 41:  1336   +   Tungsten
- 42:  1315   -   Pokno
- 43:  1280       CrimsonFalcon
- 44:  1263  NEW  ClassicMitch
- 45:  1260   -   Barrage
----
- 46:  1204   +   Wakening
- 47:  1199       HK
- 48:  1193  NEW  The Engineer's Secondaries
- 49:  1173       Sith
- 50:  1159   +   LetsDuet
- 51:  1157   +   JusttheTipper
- 52:  1157       Smoyd
- 53:  1153  ---  2%
- 54:  1130  +++  Bahlakay
- 55:  1104       YYZ
- 56:  1088  NEW  JiveTurkey
- 57:  1086       Poundcake
- 58:  1076   +   Chris
- 59:  1075  ---  RageCage
- 60:  1060   +   G.O.P.
- 61:  1059   -   Jop
----
- 62:   971   +   Total
- 63:   969       Papay
----
- 64:   928       Noobletz
- 65:   927  ---  Pomfkimochi
- 66:   914   +   Kiwi
- 67:   910       Mantou
- 68:   910  ---  Yimpy
- 69:   893       Phlow
- 70:   893  NEW  AriesNova
- 71:   889   +   CVWAUW
- 72:   886       Mosh'sFalco
- 73:   876  ---  UMR
- 74:   869       Lockirby
- 75:   861       Joe
- 76:   837   +   Q
- 77:   837       M&M
- 78:   831   -   Cecil
- 79:   811   -   RationalPie
- 80:   804       NaCl
- 81:   788   +   Lamps
- 82:   787  NEW  Jesus
- 83:   776  +++  Aveeno
- 84:   771       WinterSea
- 85:   770   +   Jo
- 86:   766   -   MoonRobin
- 87:   765  +++  Strawberry
- 88:   765   +   Nay
- 89:   763   +   Smough
- 90:   763       USSR
- 91:   755       Cos
- 92:   749  ---  shadowslippy
- 93:   749   +   Jacob
- 94:   749       Dak
- 95:   749       Jing
- 96:   740       Javqa
- 97:   737  ---  Ravioli
- 98:   733       Tfolk
- 99:   722       _espo
-100:   700   -   zoonie
----
-101:   659       David
----
-102:   573       Pika
----
-103:   444       Norman
+  4:  1408       lonebutterfish
+  5:  1405       Cyan
+  6:  1378       Gerb
+  7:  1364       Dshi
+  8:  1344       EWC
+  9:  1326       Simba
+ 10:  1322       Eidolon
+ 11:  1319       Love
+ 12:  1306       Drolian's Secondaries
+ 13:  1296       Windrose
+ 14:  1295       Freedom
+ 15:  1294       Eon
+ 16:  1285       Delta
+ 17:  1276       Ursi
+ 18:  1274       OT Eric
+ 19:  1272       Dr. Shotz
+ 20:  1271       lonebutterfish's Secondaries
+ 21:  1270       FUTANARI IDOL's Secondaries
+ 22:  1269       MurphyPrime
+ 23:  1268       Keatsta
+ 24:  1263       KrispySmooth
+ 25:  1262       Future
+ 26:  1252       Juice
+ 27:  1247       Nigrescent
+ 28:  1245       Fringent
+ 29:  1244       IceBallz
+ 30:  1244       CrimsonFalcon
+ 31:  1229       Rabbit's Secondaries
+ 32:  1225       Drolian
+ 33:  1223       G Pipes
+ 34:  1220       Shio
+ 35:  1220       Root
+ 36:  1218       Crimson
+ 37:  1217       RageCage
+ 38:  1216       Mosh
+ 39:  1207       HK
+ 40:  1201       2%
+ 41:  1201       Life
+ 42:  1195       Wakening
+ 43:  1194       Pokno
+ 44:  1194       Tungsten
+ 45:  1193       DiscoWinter
+ 46:  1191       Smoyd
+ 47:  1184       Barrage
+ 48:  1181       G.O.P.
+ 49:  1176       CVWAUW
+ 50:  1175       Pomfkimochi
+ 51:  1166       YYZ
+ 52:  1163       Total
+ 53:  1163       UMR
+ 54:  1162       Tfolk
+ 55:  1161       Kiwi
+ 56:  1161       shadowslippy
+ 57:  1156       Ravioli
+ 58:  1156       LetsDuet
+ 59:  1153       Aveeno
+ 60:  1153       Lamps
+ 61:  1152       USSR
+ 62:  1152       Poundcake
+ 63:  1152       _espo
+ 64:  1152       WinterSea
+ 65:  1151       Jo
+ 66:  1150       Cos
+ 67:  1149       Yimpy
+ 68:  1148       David
+ 69:  1139       Papay
+ 70:  1138       Noobletz
+ 71:  1134       MoonRobin
+ 72:  1134       Phlow
+ 73:  1127       Mosh'sFalco
+ 74:  1124       Mantou
+ 75:  1122       JusttheTipper
+ 76:  1110       Sith
+ 77:  1110       Bahlakay
+ 78:  1110       Pika
+ 79:  1107       Chris
+ 80:  1095       NaCl
+ 81:  1089       Joe
+ 82:  1084       Lockirby
+ 83:  1079       zoonie
+ 84:  1077       Javqa
+ 85:  1074       Norman
+ 86:  1050       Cecil
+ 87:  1030       Smough
+ 88:  1008       Jacob

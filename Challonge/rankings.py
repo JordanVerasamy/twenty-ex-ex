@@ -10,13 +10,13 @@ CHALLONGE_USERNAME = config.CHALLONGE_USERNAME
 CHALLONGE_API_KEY = config.CHALLONGE_API_KEY
 
 # The higher the K-factor, the more drastically ratings change after every individual match.
-K_FACTOR = 10
+K_FACTOR = 50
 
 # The number of times the program repeats every tournament.
-ITERATIONS = 150
+ITERATIONS = 1
 
 # The number of times the program repeats the entire process
-SUPER_ITERATIONS = 100
+SUPER_ITERATIONS = 1
 
 # Any gap between player ratings that is higher than this threshold marks a new tier.
 TIER_THRESHOLD = 35
@@ -32,11 +32,12 @@ tournament_urls = [
 	'uwsmashclub-UWmelee27',
 	'Crossroads2',
 	'Crossroads3',
-	'uwsmashclub-UWmelee28'
+	'uwsmashclub-UWmelee28',
+	'Crossroads4',
+	'uwsmashclub-UWmelee29'
 ]
 
 new_tournaments = [
-	'Crossroads4'
 ]
 
 with open('alt_tags.json', 'r') as data_file:
@@ -44,6 +45,9 @@ with open('alt_tags.json', 'r') as data_file:
 
 with open('ignore.json', 'r') as data_file:
 	ignored = json.load(data_file)
+
+with open('special_cases.json', 'r') as data_file:
+	special_cases = json.load(data_file)
 
 tournament_trackers = map(lambda x: TournamentTracker(CHALLONGE_USERNAME, x, CHALLONGE_API_KEY), tournament_urls)
 new_tts = map(lambda x: TournamentTracker(CHALLONGE_USERNAME, x, CHALLONGE_API_KEY), new_tournaments)
@@ -72,7 +76,12 @@ def get_updated_elo(player_rating, opponent_rating, score):
 # for example, here's a tag: '(p8)ST | Life(s2)'
 # get_real_tag would return 'Life'.
 
-def get_real_tag(tag):
+def get_real_tag(tag, tournament_url):
+
+	if tournament_url in special_cases:
+		if tag in special_cases[tournament_url]:
+			return special_cases[tournament_url][tag]
+
 	base_tag = tag[tag.find('|')+1:].lower().replace(' ', '')
 	base_tag = re.sub('\(\w*\)', '', base_tag)
 	for player in alt_tags:
@@ -99,7 +108,8 @@ def compute_single_ratings(tournament_trackers):
 			# Go through all players in the current tournament, assign them
 			# 1200 elo if we don't have any data on them already
 			for tag in tt.get_all_players():
-				player = get_real_tag(tag)
+				player = get_real_tag(tag, tt.tournament_url)
+
 				if player not in ratings and player not in ignored:
 					ratings[player] = STARTING_ELO
 				if player not in names and player not in ignored:
@@ -117,8 +127,8 @@ def compute_single_ratings(tournament_trackers):
 				if match.winner in ignored or match.loser in ignored:
 					continue
 
-				winner = get_real_tag(match.winner)
-				loser = get_real_tag(match.loser)
+				winner = get_real_tag(match.winner, tt.tournament_url)
+				loser = get_real_tag(match.loser, tt.tournament_url)
 				score = match.winner_score / float((match.winner_score + match.loser_score))
 
 				winner_rating = ratings[winner]
