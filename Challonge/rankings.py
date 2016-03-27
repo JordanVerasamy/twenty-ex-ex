@@ -10,13 +10,13 @@ CHALLONGE_USERNAME = config.CHALLONGE_USERNAME
 CHALLONGE_API_KEY = config.CHALLONGE_API_KEY
 
 # The higher the K-factor, the more drastically ratings change after every individual match.
-K_FACTOR = 50
+K_FACTOR = 10
 
 # The number of times the program repeats every tournament.
-ITERATIONS = 1
+ITERATIONS = 170
 
 # The number of times the program repeats the entire process
-SUPER_ITERATIONS = 1
+SUPER_ITERATIONS = 15
 
 # Any gap between player ratings that is higher than this threshold marks a new tier.
 TIER_THRESHOLD = 35
@@ -24,7 +24,7 @@ TIER_THRESHOLD = 35
 # The elo that a new player starts at before their first game.
 STARTING_ELO = 1200
 
-OUTPUT_FILE = 'players_new_movement.txt'
+OUTPUT_FILE = 'players.txt'
 
 tournament_urls = [
 	'uwsmashclub-UWMelee25',
@@ -44,7 +44,7 @@ with open('alt_tags.json', 'r') as data_file:
 	alt_tags = json.load(data_file)
 
 with open('ignore.json', 'r') as data_file:
-	ignored = json.load(data_file)
+	ignore_list = json.load(data_file)
 
 with open('special_cases.json', 'r') as data_file:
 	special_cases = json.load(data_file)
@@ -96,6 +96,11 @@ def get_real_tag(tag, tournament_url):
 
 ### ------------------------------------------- ###
 
+def ignored(tag):
+	return tag.lower() in map(lambda x: x.lower(), ignore_list)
+
+### ------------------------------------------- ###
+
 def compute_single_ratings(tournament_trackers):
 	ratings = {}
 
@@ -110,9 +115,10 @@ def compute_single_ratings(tournament_trackers):
 			for tag in tt.get_all_players():
 				player = get_real_tag(tag, tt.tournament_url)
 
-				if player not in ratings and player not in ignored:
+				if player not in ratings and not ignored(player):
+					if player == 'norman' : print "FUCK"
 					ratings[player] = STARTING_ELO
-				if player not in names and player not in ignored:
+				if player not in names and not ignored(player):
 					names.append(player)
 
 			# Get a list of all matches from the tournament (we already pulled this from Challonge)
@@ -120,15 +126,17 @@ def compute_single_ratings(tournament_trackers):
 			random.shuffle(matches)
 
 			for match in matches:
+
+				winner = get_real_tag(match.winner, tt.tournament_url)
+				loser = get_real_tag(match.loser, tt.tournament_url)
+
 				# Get tags of both players in the current match, calculate how much elo
 				# should change hands, then add or deduct as necessary.
 				if match.winner_score == match.loser_score: # i.e. if someone was DQ'd or absent
 					continue
-				if match.winner in ignored or match.loser in ignored:
+				if ignored(winner) or ignored(loser):
 					continue
 
-				winner = get_real_tag(match.winner, tt.tournament_url)
-				loser = get_real_tag(match.loser, tt.tournament_url)
 				score = match.winner_score / float((match.winner_score + match.loser_score))
 
 				winner_rating = ratings[winner]
@@ -234,3 +242,5 @@ with open(OUTPUT_FILE, 'w') as outfile:
 		count += 1
 
 print '\nfully discombobulated!'
+
+print ignored('norman')
