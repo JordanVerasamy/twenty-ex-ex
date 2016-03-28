@@ -13,10 +13,10 @@ CHALLONGE_API_KEY = config.CHALLONGE_API_KEY
 K_FACTOR = 10
 
 # The number of times the program repeats every tournament.
-ITERATIONS = 170
+ITERATIONS = 100
 
 # The number of times the program repeats the entire process
-SUPER_ITERATIONS = 15
+SUPER_ITERATIONS = 50
 
 # Any gap between player ratings that is higher than this threshold marks a new tier.
 TIER_THRESHOLD = 35
@@ -26,7 +26,7 @@ STARTING_ELO = 1200
 
 OUTPUT_FILE = 'players.txt'
 
-tournament_urls = [
+TOURNAMENT_URLS = [
 	'uwsmashclub-UWMelee25',
 	'uwsmashclub-UWmelee26',
 	'uwsmashclub-UWmelee27',
@@ -37,30 +37,29 @@ tournament_urls = [
 	'uwsmashclub-UWmelee29'
 ]
 
-new_tournaments = [
+NEW_TOURNAMENTS = [
 ]
 
 with open('alt_tags.json', 'r') as data_file:
-	alt_tags = json.load(data_file)
+	ALT_TAGS = json.load(data_file)
 
 with open('ignore.json', 'r') as data_file:
-	ignore_list = json.load(data_file)
+	IGNORE_LIST = json.load(data_file)
 
 with open('special_cases.json', 'r') as data_file:
-	special_cases = json.load(data_file)
-
-tournament_trackers = map(lambda x: TournamentTracker(CHALLONGE_USERNAME, x, CHALLONGE_API_KEY), tournament_urls)
-new_tts = map(lambda x: TournamentTracker(CHALLONGE_USERNAME, x, CHALLONGE_API_KEY), new_tournaments)
+	SPECIAL_CASES = json.load(data_file)
 
 names = []
 
 ### ------------------------------------------- ###
 
-# consumes ratings of both players, outputs the amount that the winner's
-# elo should increase and the loser's should decrease
+# helper for get_updated_elo. returns expected score \in [0,1] between players
 
 def get_expected_score(player_rating, opponent_rating):
 	return 1 / (1 + 10 ** ((opponent_rating - player_rating)/400))
+
+# consumes ratings of both players, outputs the amount that the winner's
+# elo should increase and the loser's should decrease
 
 def get_updated_elo(player_rating, opponent_rating, score):
 	expected_score = get_expected_score(player_rating, opponent_rating)
@@ -78,16 +77,16 @@ def get_updated_elo(player_rating, opponent_rating, score):
 
 def get_real_tag(tag, tournament_url):
 
-	if tournament_url in special_cases:
-		if tag in special_cases[tournament_url]:
-			return special_cases[tournament_url][tag]
+	if tournament_url in SPECIAL_CASES:
+		if tag in SPECIAL_CASES[tournament_url]:
+			return SPECIAL_CASES[tournament_url][tag]
 
 	base_tag = tag[tag.find('|')+1:].lower().replace(' ', '')
 	base_tag = re.sub('\(\w*\)', '', base_tag)
-	for player in alt_tags:
+	for player in ALT_TAGS:
 		if base_tag == player.lower().replace(' ', ''):
 			return player
-		if base_tag in map(lambda x: x.lower().replace(' ', ''), alt_tags[player]):
+		if base_tag in map(lambda x: x.lower().replace(' ', ''), ALT_TAGS[player]):
 			return player
 	for player in names:
 		if base_tag == player.lower().replace(' ', ''):
@@ -96,10 +95,14 @@ def get_real_tag(tag, tournament_url):
 
 ### ------------------------------------------- ###
 
+# returns true if and only if `tag` is in `ignored` while ignoring case
+
 def ignored(tag):
-	return tag.lower() in map(lambda x: x.lower(), ignore_list)
+	return tag.lower() in map(lambda x: x.lower(), IGNORE_LIST)
 
 ### ------------------------------------------- ###
+
+# computes and returns a single dict mapping players to elo ratings
 
 def compute_single_ratings(tournament_trackers):
 	ratings = {}
@@ -116,7 +119,6 @@ def compute_single_ratings(tournament_trackers):
 				player = get_real_tag(tag, tt.tournament_url)
 
 				if player not in ratings and not ignored(player):
-					if player == 'norman' : print "FUCK"
 					ratings[player] = STARTING_ELO
 				if player not in names and not ignored(player):
 					names.append(player)
@@ -152,6 +154,9 @@ def compute_single_ratings(tournament_trackers):
 
 ### ------------------------------------------- ###
 
+# consumes multiple dicts, each of which maps players to elo ratings, and returns a dict
+# that maps players to their average elo ratings
+
 def combine_ratings(ratings_list):
 	ret = {}
 	for ratings in ratings_list:
@@ -166,6 +171,9 @@ def combine_ratings(ratings_list):
 
 ### ------------------------------------------- ###
 
+# runs compute_single_ratings a bunch of times,
+# then combines them all using combine_ratings
+
 def compute_aggregate_ratings(tournament_trackers):
 	ratings_list = []
 
@@ -176,6 +184,11 @@ def compute_aggregate_ratings(tournament_trackers):
 	return combine_ratings(ratings_list)
 
 ### ------------------------------------------- ###
+
+# consumes an old ratings dict and a new ratings dict, returns a dict mapping players
+# to a string representing how they moved between the old and new ratings
+
+# for example, if a player moved up a lot in the rankings, this will return '+++'
 
 def get_movement(old_ratings, ratings):
 	movement = {}
@@ -192,10 +205,14 @@ def get_movement(old_ratings, ratings):
 		difference = old_rankings.index(player) + adj - rankings.index(player)
 		if abs(difference) <= 1:
 			movement[player] = '   '
-		elif difference > 4:
+		elif difference > 5:
 			movement[player] = '+++'
-		elif difference < -4:
+		elif difference < -5:
 			movement[player] = '---'
+		elif difference > 3:
+			movement[player] = '++'
+		elif difference < -3:
+			movement[player] = '--'
 		elif difference > 1:
 			movement[player] = ' + '
 		elif difference < -1:
@@ -205,42 +222,54 @@ def get_movement(old_ratings, ratings):
 
 ### ------------------------------------------- ###
 
+# write the elo ratings of everyone in ratings in a nice format to OUTPUT_FILE
+
+def write_ratings_to_file(ratings, movement, OUTPUT_FILE):
+
+	count = 1
+	last = -1
+
+	with open(OUTPUT_FILE, 'w') as outfile:
+
+		# iterate through all players, sorted by rating
+		for player in sorted(ratings, key=ratings.get, reverse=True):
+
+			# If there's a big gap between the last player and this player, mark the
+			# beginning of a new tier. Either way, output their rankings, elo scores, and tags
+			if last - ratings[player] > TIER_THRESHOLD:
+				outfile.write('---\n')
+
+			if movement:
+				outfile.write('{r:3.0f}:  {s:4.0f}  {m}  {p}\n'.format(r=count, s=ratings[player], m=movement[player], p=player))
+			else:
+				outfile.write('{r:3.0f}:  {s:4.0f}       {p}\n'.format(r=count, s=ratings[player], p=player))
+
+			last = ratings[player]
+			count += 1
+
+### ------------------------------------------- ###
+
+print 'mapping constructors...'
+tournament_trackers = map(lambda x: TournamentTracker(CHALLONGE_USERNAME, x, CHALLONGE_API_KEY), TOURNAMENT_URLS)
+new_tts = map(lambda x: TournamentTracker(CHALLONGE_USERNAME, x, CHALLONGE_API_KEY), NEW_TOURNAMENTS)
+print 'done.'
+
 # Pull all match data from Challonge for all tournaments in `tournament_urls`.
 # (See the TournamentTracker class for details)
 for tt in tournament_trackers + new_tts:
 	print 'pulling... {}'.format(tt.tournament_url)
 	tt.pull_matches()
 
-old_ratings = compute_aggregate_ratings(tournament_trackers)
-
+# if there are new tournaments, compute ratings with and without them separately (so we can compute movement)
 if new_tts:
+	old_ratings = compute_aggregate_ratings(tournament_trackers)
 	ratings = compute_aggregate_ratings(tournament_trackers + new_tts)
 	movement = get_movement(old_ratings, ratings)
 else:
-	ratings = old_ratings
+	ratings = compute_aggregate_ratings(tournament_trackers)
 	movement = False
 
-count = 1
-last = -1
-
-with open(OUTPUT_FILE, 'w') as outfile:
-
-	# iterate through all players, sorted by rating
-	for player in sorted(ratings, key=ratings.get, reverse=True):
-
-		# If there's a big gap between the last player and this player, mark the
-		# beginning of a new tier. Either way, output their rankings, elo scores, and tags
-		if last - ratings[player] > TIER_THRESHOLD:
-			outfile.write('---\n')
-
-		if movement:
-			outfile.write('{r:3.0f}:  {s:4.0f}  {m}  {p}\n'.format(r=count, s=ratings[player], m=movement[player], p=player))
-		else:
-			outfile.write('{r:3.0f}:  {s:4.0f}       {p}\n'.format(r=count, s=ratings[player], p=player))
-
-		last = ratings[player]
-		count += 1
+# print results to file, then exit
+write_ratings_to_file(ratings, movement, OUTPUT_FILE)
 
 print '\nfully discombobulated!'
-
-print ignored('norman')
