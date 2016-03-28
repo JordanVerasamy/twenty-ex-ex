@@ -13,10 +13,10 @@ CHALLONGE_API_KEY = config.CHALLONGE_API_KEY
 K_FACTOR = 10
 
 # The number of times the program repeats every tournament.
-ITERATIONS = 100
+ITERATIONS = 10
 
 # The number of times the program repeats the entire process
-SUPER_ITERATIONS = 50
+SUPER_ITERATIONS = 5
 
 # Any gap between player ratings that is higher than this threshold marks a new tier.
 TIER_THRESHOLD = 35
@@ -40,13 +40,13 @@ TOURNAMENT_URLS = [
 NEW_TOURNAMENTS = [
 ]
 
-with open('alt_tags.json', 'r') as data_file:
+with open('json/alt_tags.json', 'r') as data_file:
 	ALT_TAGS = json.load(data_file)
 
-with open('ignore.json', 'r') as data_file:
+with open('json/ignore.json', 'r') as data_file:
 	IGNORE_LIST = json.load(data_file)
 
-with open('special_cases.json', 'r') as data_file:
+with open('json/special_cases.json', 'r') as data_file:
 	SPECIAL_CASES = json.load(data_file)
 
 names = []
