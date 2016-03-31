@@ -13,10 +13,10 @@ CHALLONGE_API_KEY = config.CHALLONGE_API_KEY
 K_FACTOR = 10
 
 # The number of times the program repeats every tournament.
-ITERATIONS = 10
+ITERATIONS = 80
 
 # The number of times the program repeats the entire process
-SUPER_ITERATIONS = 5
+SUPER_ITERATIONS = 50
 
 # Any gap between player ratings that is higher than this threshold marks a new tier.
 TIER_THRESHOLD = 35
@@ -25,6 +25,7 @@ TIER_THRESHOLD = 35
 STARTING_ELO = 1200
 
 OUTPUT_FILE = 'players.txt'
+OUTPUT_TYPE = 'HTML'
 
 TOURNAMENT_URLS = [
 	'uwsmashclub-UWMelee25',
@@ -249,6 +250,35 @@ def write_ratings_to_file(ratings, movement, OUTPUT_FILE):
 
 ### ------------------------------------------- ###
 
+def write_ratings_to_html(ratings, movement, OUTPUT_FILE):
+
+	count = 1
+	last = -1
+
+	with open(OUTPUT_FILE, 'w') as outfile:
+
+		# iterate through all players, sorted by rating
+		for player in sorted(ratings, key=ratings.get, reverse=True):
+
+			outfile.write('<tr>\n')
+
+			# If there's a big gap between the last player and this player, mark the
+			# beginning of a new tier. Either way, output their rankings, elo scores, and tags
+			#if last - ratings[player] > TIER_THRESHOLD:
+			#	outfile.write('---\n')
+
+			if movement:
+				outfile.write('<td>{r:3.0f}</td>\n<td>{s:4.0f}</td>\n<td>{m}</td>\n<td>{p}</td>\n'.format(r=count, s=ratings[player], m=movement[player], p=player))
+			else:
+				outfile.write('<td>{r:3.0f}</td>\n<td>{s:4.0f}</td>\n<td>{p}</td>\n'.format(r=count, s=ratings[player], p=player))
+
+			last = ratings[player]
+			count += 1
+
+			outfile.write('</tr>\n')
+
+### ------------------------------------------- ###
+
 print 'mapping constructors...'
 tournament_trackers = map(lambda x: TournamentTracker(CHALLONGE_USERNAME, x, CHALLONGE_API_KEY), TOURNAMENT_URLS)
 new_tts = map(lambda x: TournamentTracker(CHALLONGE_USERNAME, x, CHALLONGE_API_KEY), NEW_TOURNAMENTS)
@@ -270,6 +300,11 @@ else:
 	movement = False
 
 # print results to file, then exit
-write_ratings_to_file(ratings, movement, OUTPUT_FILE)
+if OUTPUT_TYPE == 'HTML':
+	write_ratings_to_html(ratings, movement, OUTPUT_FILE)
+elif OUTPUT_TYPE == 'TXT':
+	write_ratings_to_file(ratings, movement, OUTPUT_FILE)
+else:
+	print 'Dunno how you want me to output this...'
 
 print '\nfully discombobulated!'
