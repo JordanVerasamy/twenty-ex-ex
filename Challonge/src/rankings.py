@@ -13,19 +13,19 @@ CHALLONGE_API_KEY = config.CHALLONGE_API_KEY
 K_FACTOR = 10
 
 # The number of times the program repeats every tournament.
-ITERATIONS = 80
+ITERATIONS = 220
 
 # The number of times the program repeats the entire process
-SUPER_ITERATIONS = 50
+SUPER_ITERATIONS = 90
 
 # Any gap between player ratings that is higher than this threshold marks a new tier.
-TIER_THRESHOLD = 35
+TIER_THRESHOLD = 25
 
 # The elo that a new player starts at before their first game.
 STARTING_ELO = 1200
 
 OUTPUT_FILE = 'players.txt'
-OUTPUT_TYPE = 'HTML'
+OUTPUT_TYPE = 'HTML' #TXT or HTML
 
 TOURNAMENT_URLS = [
 	'uwsmashclub-UWMelee25',
@@ -34,11 +34,12 @@ TOURNAMENT_URLS = [
 	'Crossroads2',
 	'Crossroads3',
 	'uwsmashclub-UWmelee28',
-	'Crossroads4',
-	'uwsmashclub-UWmelee29'
+	'uwsmashclub-UWmelee29',
+	'Crossroads4'
 ]
 
 NEW_TOURNAMENTS = [
+	'Crossroads5'
 ]
 
 with open('json/alt_tags.json', 'r') as data_file:
@@ -211,9 +212,9 @@ def get_movement(old_ratings, ratings):
 		elif difference < -5:
 			movement[player] = '---'
 		elif difference > 3:
-			movement[player] = '++'
+			movement[player] = '++ '
 		elif difference < -3:
-			movement[player] = '--'
+			movement[player] = '-- '
 		elif difference > 1:
 			movement[player] = ' + '
 		elif difference < -1:
@@ -235,8 +236,7 @@ def write_ratings_to_file(ratings, movement, OUTPUT_FILE):
 		# iterate through all players, sorted by rating
 		for player in sorted(ratings, key=ratings.get, reverse=True):
 
-			# If there's a big gap between the last player and this player, mark the
-			# beginning of a new tier. Either way, output their rankings, elo scores, and tags
+			# If there's a big gap OUTPUT_TYPE = 'HTML'
 			if last - ratings[player] > TIER_THRESHOLD:
 				outfile.write('---\n')
 
@@ -248,7 +248,7 @@ def write_ratings_to_file(ratings, movement, OUTPUT_FILE):
 			last = ratings[player]
 			count += 1
 
-### ------------------------------------------- ###
+### ------------------------------------------- ###Tag
 
 def write_ratings_to_html(ratings, movement, OUTPUT_FILE):
 
