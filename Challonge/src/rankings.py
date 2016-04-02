@@ -3,6 +3,7 @@ import config
 import random
 import json
 import re
+import math
 
 ### ------------------------------------------- ###
 
@@ -13,10 +14,10 @@ CHALLONGE_API_KEY = config.CHALLONGE_API_KEY
 K_FACTOR = 10
 
 # The number of times the program repeats every tournament.
-ITERATIONS = 220
+ITERATIONS = 100
 
 # The number of times the program repeats the entire process
-SUPER_ITERATIONS = 90
+SUPER_ITERATIONS = 20
 
 # Any gap between player ratings that is higher than this threshold marks a new tier.
 TIER_THRESHOLD = 25
@@ -24,8 +25,8 @@ TIER_THRESHOLD = 25
 # The elo that a new player starts at before their first game.
 STARTING_ELO = 1200
 
-OUTPUT_FILE = 'players.txt'
-OUTPUT_TYPE = 'HTML' #TXT or HTML
+OUTPUT_FILE_TXT = 'players.txt'
+OUTPUT_FILE_HTML = 'players_html.txt'
 
 TOURNAMENT_URLS = [
 	'uwsmashclub-UWMelee25',
@@ -35,11 +36,12 @@ TOURNAMENT_URLS = [
 	'Crossroads3',
 	'uwsmashclub-UWmelee28',
 	'uwsmashclub-UWmelee29',
-	'Crossroads4'
+	'Crossroads4',
+	'Crossroads5'
 ]
 
 NEW_TOURNAMENTS = [
-	'Crossroads5'
+
 ]
 
 with open('json/alt_tags.json', 'r') as data_file:
@@ -104,6 +106,12 @@ def ignored(tag):
 
 ### ------------------------------------------- ###
 
+def get_score(winner_score, loser_score):
+	#return winner_score / float(winner_score + loser_score)
+	return math.sqrt(winner_score / float(winner_score + loser_score))
+
+### ------------------------------------------- ###
+
 # computes and returns a single dict mapping players to elo ratings
 
 def compute_single_ratings(tournament_trackers):
@@ -141,7 +149,7 @@ def compute_single_ratings(tournament_trackers):
 				if ignored(winner) or ignored(loser):
 					continue
 
-				score = match.winner_score / float((match.winner_score + match.loser_score))
+				score = get_score(match.winner_score, match.loser_score)
 
 				winner_rating = ratings[winner]
 				loser_rating = ratings[loser]
@@ -300,11 +308,7 @@ else:
 	movement = False
 
 # print results to file, then exit
-if OUTPUT_TYPE == 'HTML':
-	write_ratings_to_html(ratings, movement, OUTPUT_FILE)
-elif OUTPUT_TYPE == 'TXT':
-	write_ratings_to_file(ratings, movement, OUTPUT_FILE)
-else:
-	print 'Dunno how you want me to output this...'
+write_ratings_to_html(ratings, movement, OUTPUT_FILE_HTML)
+write_ratings_to_file(ratings, movement, OUTPUT_FILE_TXT)
 
 print '\nfully discombobulated!'
