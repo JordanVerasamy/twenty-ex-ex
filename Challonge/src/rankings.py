@@ -14,10 +14,10 @@ CHALLONGE_API_KEY = config.CHALLONGE_API_KEY
 K_FACTOR = 10
 
 # The number of times the program repeats every tournament.
-ITERATIONS = 100
+ITERATIONS = 200
 
 # The number of times the program repeats the entire process
-SUPER_ITERATIONS = 20
+SUPER_ITERATIONS = 2
 
 # Any gap between player ratings that is higher than this threshold marks a new tier.
 TIER_THRESHOLD = 25
@@ -25,14 +25,9 @@ TIER_THRESHOLD = 25
 # The elo that a new player starts at before their first game.
 STARTING_ELO = 1200
 
-OUTPUT_FILE_TXT = 'players.txt'
-OUTPUT_FILE_HTML = 'players_html.txt'
+OUTPUT_FILE = 'rankings'
 
 TOURNAMENT_URLS = [
-	'uwsmashclub-UWMelee25',
-	'uwsmashclub-UWmelee26',
-	'uwsmashclub-UWmelee27',
-	'Crossroads2',
 	'Crossroads3',
 	'uwsmashclub-UWmelee28',
 	'uwsmashclub-UWmelee29',
@@ -41,7 +36,6 @@ TOURNAMENT_URLS = [
 ]
 
 NEW_TOURNAMENTS = [
-
 ]
 
 with open('json/alt_tags.json', 'r') as data_file:
@@ -308,7 +302,7 @@ else:
 	movement = False
 
 # print results to file, then exit
-write_ratings_to_html(ratings, movement, OUTPUT_FILE_HTML)
-write_ratings_to_file(ratings, movement, OUTPUT_FILE_TXT)
+write_ratings_to_html(ratings, movement, '{}.html'.format(OUTPUT_FILE))
+write_ratings_to_file(ratings, movement, '{}.txt'.format(OUTPUT_FILE))
 
 print '\nfully discombobulated!'
