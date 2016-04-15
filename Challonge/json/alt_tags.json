@@ -4,6 +4,10 @@
 		"Judy Hopps",
 		"What's Your Tag Again?"
 	],
+	"Simba" : [
+		"CubSimba",
+		"Simba #24!"
+	],
 	"OT Eric" : [
 		"BLT Eric"
 	],
@@ -23,7 +27,8 @@
 	],
 	"G Pipes" : [
 		"Jee Pipes",
-		"G Debt"
+		"G Debt",
+		"Yugi Boy"
 	],
 	"lonebutterfish" : [
 		"Mike Oxwelling",
@@ -62,7 +67,8 @@
 	],
 	"JusttheTipper" : [
 		"5-0'd by Eon",
-		"Mr.Fuji"
+		"Mr.Fuji",
+		"Kobe Bryant"
 	],
 	"EWC" : [
 		"EWC's BBC's Planet Earth"
@@ -73,14 +79,15 @@
 	"Windrose" : [
 		"Bible Black"
 	],
-	"Dr. Shotz" : [
-		"Dr. Shots",
+	"Dr. Shots" : [
+		"Dr. Shotz",
 		"BLT TO OT Dr. Shotz",
 		"Dr. Shoals"
 	],
 	"Drolian" : [
 		"Ultralight Beam",
-		"Jenny's BMW"
+		"Jenny's BMW",
+		"14th"
 	],
 	"DiscoWinter" : [
 		"Disco",
@@ -118,5 +125,12 @@
 	],
 	"CVWAUW" : [
 		"CVWow"
+	],
+	"Root" : [
+		"Root'sFox"
+	],
+	"Papay" : [
+		"Dr. Shitz",
+		"Dr. S"
 	]
 }

@@ -14,7 +14,7 @@ CHALLONGE_API_KEY = config.CHALLONGE_API_KEY
 K_FACTOR = 10
 
 # The number of times the program repeats every tournament.
-ITERATIONS = 200
+ITERATIONS = 15
 
 # The number of times the program repeats the entire process
 SUPER_ITERATIONS = 2
@@ -25,14 +25,24 @@ TIER_THRESHOLD = 25
 # The elo that a new player starts at before their first game.
 STARTING_ELO = 1200
 
-OUTPUT_FILE = 'rankings'
+OUTPUT_FILE = 'elo'
 
 TOURNAMENT_URLS = [
+	'uwsmashclub-UWmelee25',
+	'uwsmashclub-UWmelee26',
 	'Crossroads3',
+	'uwsmashclub-UWmelee27',
 	'uwsmashclub-UWmelee28',
-	'uwsmashclub-UWmelee29',
 	'Crossroads4',
-	'Crossroads5'
+	'uwsmashclub-UWmelee29',
+	'Crossroads5',
+	'Crossroads6'
+
+	# 'letsduet8plusnik',
+	# #'letsduet9',
+	# 'letsduet10',
+	# 'letsdueteleven',
+	# 'letsduettwelve'
 ]
 
 NEW_TOURNAMENTS = [
@@ -228,12 +238,19 @@ def get_movement(old_ratings, ratings):
 
 # write the elo ratings of everyone in ratings in a nice format to OUTPUT_FILE
 
-def write_ratings_to_file(ratings, movement, OUTPUT_FILE):
+def write_ratings_to_file(tts, ratings, movement, OUTPUT_FILE):
 
 	count = 1
 	last = -1
 
 	with open(OUTPUT_FILE, 'w') as outfile:
+
+		outfile.write('Tournaments used:\n')
+
+		for tt in tts:
+			outfile.write('{}\n'.format(tt.tournament_url))
+
+		outfile.write('\n')
 
 		# iterate through all players, sorted by rating
 		for player in sorted(ratings, key=ratings.get, reverse=True):
@@ -303,6 +320,6 @@ else:
 
 # print results to file, then exit
 write_ratings_to_html(ratings, movement, '{}.html'.format(OUTPUT_FILE))
-write_ratings_to_file(ratings, movement, '{}.txt'.format(OUTPUT_FILE))
+write_ratings_to_file(tournament_trackers + new_tts, ratings, movement, '{}.txt'.format(OUTPUT_FILE))
 
 print '\nfully discombobulated!'

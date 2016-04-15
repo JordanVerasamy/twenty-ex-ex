@@ -1,4 +1,5 @@
 import challonge
+import pprint
 
 class CondensedMatch:
 
@@ -112,6 +113,7 @@ class TournamentTracker:
 		newly_eliminated_players = {} # keys are names, values are placings
 
 		for match in match_list:
+
 			if match['state'] == 'complete':
 
 				scores = get_scores(match['scores-csv'])
