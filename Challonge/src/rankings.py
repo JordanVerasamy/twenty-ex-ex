@@ -14,38 +14,30 @@ CHALLONGE_API_KEY = config.CHALLONGE_API_KEY
 K_FACTOR = 10
 
 # The number of times the program repeats every tournament.
-ITERATIONS = 15
+ITERATIONS = 250
 
 # The number of times the program repeats the entire process
-SUPER_ITERATIONS = 2
+SUPER_ITERATIONS = 150
 
 # Any gap between player ratings that is higher than this threshold marks a new tier.
-TIER_THRESHOLD = 25
+TIER_THRESHOLD = 30
 
 # The elo that a new player starts at before their first game.
 STARTING_ELO = 1200
 
-OUTPUT_FILE = 'elo'
+OUTPUT_FILE = 'elo4'
 
 TOURNAMENT_URLS = [
-	'uwsmashclub-UWmelee25',
-	'uwsmashclub-UWmelee26',
-	'Crossroads3',
-	'uwsmashclub-UWmelee27',
-	'uwsmashclub-UWmelee28',
 	'Crossroads4',
 	'uwsmashclub-UWmelee29',
 	'Crossroads5',
-	'Crossroads6'
-
-	# 'letsduet8plusnik',
-	# #'letsduet9',
-	# 'letsduet10',
-	# 'letsdueteleven',
-	# 'letsduettwelve'
+	'Crossroads6',
+	'Crossroads7'
 ]
 
 NEW_TOURNAMENTS = [
+	'uwsmashclub-UWmelee30',
+	'Crossroads8'
 ]
 
 with open('json/alt_tags.json', 'r') as data_file:
@@ -111,8 +103,8 @@ def ignored(tag):
 ### ------------------------------------------- ###
 
 def get_score(winner_score, loser_score):
-	#return winner_score / float(winner_score + loser_score)
-	return math.sqrt(winner_score / float(winner_score + loser_score))
+	return winner_score / float(winner_score + loser_score)
+	#return math.sqrt(winner_score / float(winner_score + loser_score))
 
 ### ------------------------------------------- ###
 
@@ -277,7 +269,8 @@ def write_ratings_to_html(ratings, movement, OUTPUT_FILE):
 	with open(OUTPUT_FILE, 'w') as outfile:
 
 		# iterate through all players, sorted by rating
-		for player in sorted(ratings, key=ratings.get, reverse=True):
+		for player in sorted(ratings, key=ratings.get, epts the sequence, which means the sequence does exist in the genome.
+		# otherwise, return false.reverse=True):
 
 			outfile.write('<tr>\n')
 

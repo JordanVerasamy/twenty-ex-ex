@@ -4,12 +4,17 @@
 		"Judy Hopps",
 		"What's Your Tag Again?"
 	],
+	"Jamrun" : [
+		"Drolyin's Bowser",
+		"Drolian's Bowser"
+	],
 	"Simba" : [
 		"CubSimba",
 		"Simba #24!"
 	],
 	"OT Eric" : [
-		"BLT Eric"
+		"BLT Eric",
+		"Dyslexic DISH"
 	],
 	"Gerb" : [
 		"Not the netplay marth instead the puff gerb",
@@ -20,7 +25,10 @@
 		"GarbageWarriorSupreme",
 		"UltimateGarbage",
 		"The Strongest Garbage",
-		"Strongest Garbage"
+		"Strongest Garbage",
+		"Legendary Garbage",
+		"Magic Garbage",
+		"Flamable Garbage!?!?"
 	],
 	"Eidolon" : [
 		"Eidolm@ster"
@@ -28,7 +36,8 @@
 	"G Pipes" : [
 		"Jee Pipes",
 		"G Debt",
-		"Yugi Boy"
+		"Yugi Boy",
+		"smokedatGPIPE"
 	],
 	"lonebutterfish" : [
 		"Mike Oxwelling",
@@ -39,7 +48,8 @@
 	],
 	"RageCage" : [
 		"Despite all my Rage I am Still Just a Rat in the Cage",
-		"SSJLinkMain"
+		"SSJLinkMain",
+		"Zhulgar The Ganon Main"
 	],
 	"Wakening" : [
 		"Wakeningg"
@@ -63,7 +73,8 @@
 	],
 	"Freedom" : [
 		"Youngster Joey",
-		"Freedomm"
+		"Freedomm",
+		"Tuxedo Mask"
 	],
 	"JusttheTipper" : [
 		"5-0'd by Eon",
@@ -82,17 +93,20 @@
 	"Dr. Shots" : [
 		"Dr. Shotz",
 		"BLT TO OT Dr. Shotz",
-		"Dr. Shoals"
+		"Dr. Shoals",
+		"shitty falcon"
 	],
 	"Drolian" : [
 		"Ultralight Beam",
 		"Jenny's BMW",
-		"14th"
+		"14th",
+		"ICs/PuffPro955"
 	],
 	"DiscoWinter" : [
 		"Disco",
 		"CWK",
-		"SamusMain"
+		"SamusMain",
+		"EuroFox"
 	],
 	"Drolian's Secondaries" : [
 		"LinkXBowserPro98",
@@ -113,6 +127,12 @@
 	"lonebutterfish's Secondaries" : [
 		"LoneMarioBlooper"
 	],
+	"Life's Secondaries" : [
+		"Life's Marth"
+	],
+	"Eon" : [
+		"help mE ON stage"
+	],
 	"Rhyme" : [
 		"HatCrab"
 	],
@@ -132,5 +152,21 @@
 	"Papay" : [
 		"Dr. Shitz",
 		"Dr. S"
+	],
+	"IceBallz" : [
+		"IceBrawlz",
+		"BizzKidDoogie"
+	],
+	"Trulliam" : [
+		"LP Trulliam"
+	],
+	"Salazar" : [
+		"Saladbutt"
+	],
+	"MurphyPrime" : [
+		"Radiant Murphy"
+	],
+	"Chuffles" : [
+		"charlie du"
 	]
 }
