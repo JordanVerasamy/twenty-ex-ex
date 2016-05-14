@@ -14,10 +14,10 @@ CHALLONGE_API_KEY = config.CHALLONGE_API_KEY
 K_FACTOR = 10
 
 # The number of times the program repeats every tournament.
-ITERATIONS = 250
+ITERATIONS = 10
 
 # The number of times the program repeats the entire process
-SUPER_ITERATIONS = 150
+SUPER_ITERATIONS = 2
 
 # Any gap between player ratings that is higher than this threshold marks a new tier.
 TIER_THRESHOLD = 30
@@ -29,14 +29,10 @@ OUTPUT_FILE = 'elo4'
 
 TOURNAMENT_URLS = [
 	'Crossroads4',
-	'uwsmashclub-UWmelee29',
-	'Crossroads5',
-	'Crossroads6',
 	'Crossroads7'
 ]
 
 NEW_TOURNAMENTS = [
-	'uwsmashclub-UWmelee30',
 	'Crossroads8'
 ]
 
@@ -261,16 +257,37 @@ def write_ratings_to_file(tts, ratings, movement, OUTPUT_FILE):
 
 ### ------------------------------------------- ###Tag
 
-def write_ratings_to_html(ratings, movement, OUTPUT_FILE):
+def write_ratings_to_html(tts, ratings, movement, OUTPUT_FILE):
 
 	count = 1
 	last = -1
 
 	with open(OUTPUT_FILE, 'w') as outfile:
 
+		outfile.write("""<div class="page-header">
+          <h1>UW Smash Club</h1>
+
+  		<p>Tournaments used:<br><br>""")
+
+		for tt in tts:
+			outfile.write('{}<br>\n'.format(tt.tournament_url))
+
+		outfile.write("""</p>
+
+        <div class="col-md-6">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Elo</th>
+				<th>Recent</th>
+                <th>Tag</th>
+              </tr>
+            </thead>
+            <tbody>""")
+
 		# iterate through all players, sorted by rating
-		for player in sorted(ratings, key=ratings.get, epts the sequence, which means the sequence does exist in the genome.
-		# otherwise, return false.reverse=True):
+		for player in sorted(ratings, key=ratings.get, reverse=True):
 
 			outfile.write('<tr>\n')
 
@@ -288,6 +305,8 @@ def write_ratings_to_html(ratings, movement, OUTPUT_FILE):
 			count += 1
 
 			outfile.write('</tr>\n')
+
+		outfile.write('</tbody></table></div></div>')
 
 ### ------------------------------------------- ###
 
@@ -312,7 +331,7 @@ else:
 	movement = False
 
 # print results to file, then exit
-write_ratings_to_html(ratings, movement, '{}.html'.format(OUTPUT_FILE))
+write_ratings_to_html(tournament_trackers + new_tts, ratings, movement, '{}.html'.format(OUTPUT_FILE))
 write_ratings_to_file(tournament_trackers + new_tts, ratings, movement, '{}.txt'.format(OUTPUT_FILE))
 
 print '\nfully discombobulated!'
