@@ -14,10 +14,10 @@ CHALLONGE_API_KEY = config.CHALLONGE_API_KEY
 K_FACTOR = 10
 
 # The number of times the program repeats every tournament.
-ITERATIONS = 10
+ITERATIONS = 300
 
 # The number of times the program repeats the entire process
-SUPER_ITERATIONS = 2
+SUPER_ITERATIONS = 250
 
 # Any gap between player ratings that is higher than this threshold marks a new tier.
 TIER_THRESHOLD = 30
@@ -25,15 +25,19 @@ TIER_THRESHOLD = 30
 # The elo that a new player starts at before their first game.
 STARTING_ELO = 1200
 
-OUTPUT_FILE = 'elo4'
+OUTPUT_FILE = 'elo'
 
 TOURNAMENT_URLS = [
 	'Crossroads4',
-	'Crossroads7'
+	'Crossroads5',
+	'Crossroads6',
+	'Crossroads7',
+	'uwsmashclub-UWmelee29'
 ]
 
 NEW_TOURNAMENTS = [
-	'Crossroads8'
+	'Crossroads8',
+	'uwsmashclub-UWmelee30'
 ]
 
 with open('json/alt_tags.json', 'r') as data_file:
