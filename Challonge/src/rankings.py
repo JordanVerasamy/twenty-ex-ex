@@ -28,16 +28,18 @@ STARTING_ELO = 1200
 OUTPUT_FILE = 'elo'
 
 TOURNAMENT_URLS = [
-	'Crossroads4',
-	'Crossroads5',
-	'Crossroads6',
-	'Crossroads7',
-	'uwsmashclub-UWmelee29'
+	'Crossroads9',
+
+	'uwsmashclub-UWmelee32',
+
+	'letsplaykw-melee_may15_2016',
+	'letsplaykw-melee_may28_2016'
 ]
 
 NEW_TOURNAMENTS = [
-	'Crossroads8',
-	'uwsmashclub-UWmelee30'
+	'uwsmashclub-UWmelee33',
+	'uwsmashclub-UWmelee34',
+	'Crossroads10'
 ]
 
 with open('json/alt_tags.json', 'r') as data_file:
@@ -83,6 +85,7 @@ def get_real_tag(tag, tournament_url):
 
 	base_tag = tag[tag.find('|')+1:].lower().replace(' ', '')
 	base_tag = re.sub('\(\w*\)', '', base_tag)
+	base_tag = re.sub('\[\w*\]', '', base_tag)
 	for player in ALT_TAGS:
 		if base_tag == player.lower().replace(' ', ''):
 			return player

@@ -6,7 +6,11 @@
 	],
 	"Jamrun" : [
 		"Drolyin's Bowser",
-		"Drolian's Bowser"
+		"Drolian's Bowser",
+		"Drolian's Johns"
+	],
+	"Jamrun's Secondaries" : [
+		"Drolian's Falco"
 	],
 	"Simba" : [
 		"CubSimba",
@@ -14,11 +18,15 @@
 	],
 	"OT Eric" : [
 		"BLT Eric",
-		"Dyslexic DISH"
+		"Dyslexic DISH",
+		"OD Falco"
 	],
 	"Gerb" : [
 		"Not the netplay marth instead the puff gerb",
 		"Gerbert"
+	],
+	"Ryan Ford" : [
+		"Chazz Princeton"
 	],
 	"GarbagePrince" : [
 		"GarbageLord",
@@ -28,16 +36,35 @@
 		"Strongest Garbage",
 		"Legendary Garbage",
 		"Magic Garbage",
-		"Flamable Garbage!?!?"
+		"Flamable Garbage!?!?",
+		"Loses round 1",
+		"Uncommon Garbage",
+		"PrinceofGarbage",
+		"Campbell's Sheik",
+		"Literally Garbage"
 	],
 	"Eidolon" : [
 		"Eidolm@ster"
+	],
+	"KrispySmooth" : [
+		"KrispyKreme"
 	],
 	"G Pipes" : [
 		"Jee Pipes",
 		"G Debt",
 		"Yugi Boy",
-		"smokedatGPIPE"
+		"smokedatGPIPE",
+		"GSkrilla"
+	],
+	"Ryan Ford's Young Link" : [
+		"Drolian's B0wser"
+	],
+	"Syphichan" : [
+		"Girl 2",
+		"Siphi"
+	],
+	"Loku" : [
+		"Loki"
 	],
 	"lonebutterfish" : [
 		"Mike Oxwelling",
@@ -46,10 +73,31 @@
 		"DrunkFox",
 		"Nick Wilde"
 	],
+	"Joey Wheeler" : [
+		"Chiu",
+		"BattleOx",
+		"Red Eyes Black Dragon"
+	],
+	"L3W" : [
+		"L3W!",
+		"Cast3W!"
+	],
+	"Deathslayer" : [
+		"Dethslayr"
+	],
+	"Gragon" : [
+		"SamusGuy"
+	],
+	"Love's Secondaries" : [
+		"LoveDoctor"
+	],
 	"RageCage" : [
 		"Despite all my Rage I am Still Just a Rat in the Cage",
 		"SSJLinkMain",
 		"Zhulgar The Ganon Main"
+	],
+	"Lockdown" : [
+		"Lockdown For What"
 	],
 	"Wakening" : [
 		"Wakeningg"
@@ -58,7 +106,8 @@
 		"Marth/Fox Pro"
 	],
 	"LetsDuet" : [
-		"Jason \"LetsDuet\" Young"
+		"Jason \"LetsDuet\" Young",
+		"Let'sUp-Cancel"
 	],
 	"Phlo" : [
 		"Flow",
@@ -71,15 +120,20 @@
 		"Jenny's BBC",
 		"OnegaiBeenis"
 	],
-	"Freedom" : [
-		"Youngster Joey",
+	"Youngster Joey" : [
+		"Freedom",
 		"Freedomm",
-		"Tuxedo Mask"
+		"Tuxedo Mask",
+		"Tenseiga",
+		"Freeeedong"
 	],
 	"JusttheTipper" : [
 		"5-0'd by Eon",
 		"Mr.Fuji",
 		"Kobe Bryant"
+	],
+	"Cyan" : [
+		"UnluckyFoxMain"
 	],
 	"EWC" : [
 		"EWC's BBC's Planet Earth"
@@ -94,19 +148,22 @@
 		"Dr. Shotz",
 		"BLT TO OT Dr. Shotz",
 		"Dr. Shoals",
-		"shitty falcon"
+		"shitty falcon",loku
 	],
 	"Drolian" : [
 		"Ultralight Beam",
 		"Jenny's BMW",
 		"14th",
-		"ICs/PuffPro955"
+		"ICs/PuffPro955",
+		"Colouring Book"
 	],
 	"DiscoWinter" : [
 		"Disco",
 		"CWK",
 		"SamusMain",
-		"EuroFox"
+		"EuroFox",
+		"SkoboCop",
+		"DiscoInferno"
 	],
 	"Drolian's Secondaries" : [
 		"LinkXBowserPro98",
@@ -121,8 +178,14 @@
 	"EWC's Secondaries" : [
 		"SomeStPattysDayPun"
 	],
+	"Dak" : [
+		"Give him the Dak"
+	],
 	"The Engineer's Secondaries" : [
 		"GreenPeachLegend"
+	],
+	"The Engineer" : [
+		"The Engine Man"
 	],
 	"lonebutterfish's Secondaries" : [
 		"LoneMarioBlooper"
@@ -138,10 +201,26 @@
 	],
 	"Shio" : [
 		"beanboozler",
-		"Nigrescent"
+		"Nigrescent",
+		"Log Burner 33",
+		"Drolololoian's Tertiary's"
 	],
 	"AutomobileV" : [
 		"Tito Lounge"
+	],
+	"Delta" : [
+		"ShittyAirline"
+	],
+	"AllisonWonderland" : [
+		"Girl 1"
+	],
+	"Weshmek" : [
+		"WESHMECHA"
+	],
+	"Yarfy" : [
+		"LedDshi",
+		"Drolian's Tap Jump",
+		"\"Cept maybe Kuriboh\""
 	],
 	"CVWAUW" : [
 		"CVWow"
@@ -149,24 +228,48 @@
 	"Root" : [
 		"Root'sFox"
 	],
+	"G$" : [
+		"G-Money"
+	],
 	"Papay" : [
 		"Dr. Shitz",
 		"Dr. S"
 	],
 	"IceBallz" : [
 		"IceBrawlz",
-		"BizzKidDoogie"
+		"BizzKidDoogie",
+		"BlueBallz"
 	],
+
 	"Trulliam" : [
-		"LP Trulliam"
+		"LP Trulliam",
+		"D.va is Bae"
+	],
+	"Moniker" : [
+		"Monikers"
 	],
 	"Salazar" : [
-		"Saladbutt"
+		"Saladbutt",
+		"Shookbox",
+		"Saladfingers"
 	],
 	"MurphyPrime" : [
-		"Radiant Murphy"
+		"Radiant Murphy",
+		"MurphyComposite"
 	],
 	"Chuffles" : [
-		"charlie du"
+		"charlie du",
+		"Charlie",
+		"Drolian's Chuffles",
+		"\"My grandpa's deck has no useless cards\""
+	],
+	"Steiner" : [
+		"Steiner; Gate"
+	],
+	"Cherries" : [
+		"How do you like dem Cherries?"
+	],
+	"HebeGeebe" : [
+		"HeBeGB"
 	]
 }
