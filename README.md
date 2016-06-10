@@ -1,3 +1,5 @@
+NOTE: This is currently hosted at http://jordanverasamy.github.io/twenty-ex-ex/
+
 twenty-ex-ex
 ============
 
