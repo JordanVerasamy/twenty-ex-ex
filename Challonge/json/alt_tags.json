@@ -41,13 +41,24 @@
 		"Uncommon Garbage",
 		"PrinceofGarbage",
 		"Campbell's Sheik",
-		"Literally Garbage"
+		"Literally Garbage",
+		"One Way Heroics Master",
+		"Random Gibberish",
+		"Trash",
+		"Something Garbage"
 	],
 	"Eidolon" : [
 		"Eidolm@ster"
 	],
+	"Kiwi" : [
+		"Kiwi: The Sleeper"
+	],
+	"Lil Brown" : [
+		"Lil Brown The Soulless"
+	],
 	"KrispySmooth" : [
-		"KrispyKreme"
+		"KrispyKreme",
+		"A Kind Stranger"
 	],
 	"G Pipes" : [
 		"Jee Pipes",
@@ -66,6 +77,9 @@
 	"Loku" : [
 		"Loki"
 	],
+	"Diablo Mablo" : [
+		"The Friend of Many"
+	],
 	"lonebutterfish" : [
 		"Mike Oxwelling",
 		"Haxfn$",
@@ -73,10 +87,26 @@
 		"DrunkFox",
 		"Nick Wilde"
 	],
+	"Kazo Brady" : [
+		"Livin' Life"
+	],
+	"Snoot" : [
+		"What a Smile"
+	],
 	"Joey Wheeler" : [
 		"Chiu",
 		"BattleOx",
-		"Red Eyes Black Dragon"
+		"Red Eyes Black Dragon",
+		"Swords of Revealing Light",
+		"Chuffles' Metaknight",
+		"Dranzer"
+	],
+	"Dragon" : [
+		"Where ya Been?"
+	],
+	"Adviceburg" : [
+		"Delayed Reactions",
+		"Free T-Shirts"
 	],
 	"L3W" : [
 		"L3W!",
@@ -88,13 +118,21 @@
 	"Gragon" : [
 		"SamusGuy"
 	],
+	"Gragon's Fox" : [
+		"A Shitty Fox"
+	],
 	"Love's Secondaries" : [
 		"LoveDoctor"
 	],
 	"RageCage" : [
 		"Despite all my Rage I am Still Just a Rat in the Cage",
 		"SSJLinkMain",
-		"Zhulgar The Ganon Main"
+		"Zhulgar The Ganon Main",
+		"RageKage",
+		"Douglas J. Falcon"
+	],
+	"KB" : [
+		"Happy I Knew Him"
 	],
 	"Lockdown" : [
 		"Lockdown For What"
@@ -102,12 +140,20 @@
 	"Wakening" : [
 		"Wakeningg"
 	],
+	"Merik" : [
+		"Meric"
+	],
 	"Mosh" : [
 		"Marth/Fox Pro"
 	],
+	"TAS" : [
+		"TAS."
+	],
 	"LetsDuet" : [
 		"Jason \"LetsDuet\" Young",
-		"Let'sUp-Cancel"
+		"Let'sUp-Cancel",
+		"MarioMaster420",
+		"What a Guy!"
 	],
 	"Phlo" : [
 		"Flow",
@@ -125,7 +171,8 @@
 		"Freedomm",
 		"Tuxedo Mask",
 		"Tenseiga",
-		"Freeeedong"
+		"Freeeedong",
+		"Rockman-sama"
 	],
 	"JusttheTipper" : [
 		"5-0'd by Eon",
@@ -133,7 +180,8 @@
 		"Kobe Bryant"
 	],
 	"Cyan" : [
-		"UnluckyFoxMain"
+		"UnluckyFoxMain",
+		"Jose's Daddy"
 	],
 	"EWC" : [
 		"EWC's BBC's Planet Earth"
@@ -148,7 +196,12 @@
 		"Dr. Shotz",
 		"BLT TO OT Dr. Shotz",
 		"Dr. Shoals",
-		"shitty falcon",loku
+		"shitty falcon",
+		"Dr. Saaaaave Me",
+		"DrSHots"
+	],
+	"Amsterdam" : [
+		"He Has Fun"
 	],
 	"Drolian" : [
 		"Ultralight Beam",
@@ -163,7 +216,9 @@
 		"SamusMain",
 		"EuroFox",
 		"SkoboCop",
-		"DiscoInferno"
+		"DiscoInferno",
+		"Cortex",
+		"Maury Povich"
 	],
 	"Drolian's Secondaries" : [
 		"LinkXBowserPro98",
@@ -185,7 +240,10 @@
 		"GreenPeachLegend"
 	],
 	"The Engineer" : [
-		"The Engine Man"
+		"The Engine Man",
+		"The Man Himself",
+		"TheEngineMan:TheLegend",
+		"The Engineer The Fastest Peach in Guelph"
 	],
 	"lonebutterfish's Secondaries" : [
 		"LoneMarioBlooper"
@@ -193,11 +251,21 @@
 	"Life's Secondaries" : [
 		"Life's Marth"
 	],
+	"ADogInDust" : [
+		"ADog"
+	],
 	"Eon" : [
-		"help mE ON stage"
+		"help mE ON stage",
+		"Sleepy Sheik",
+		"Heat Sheiking Missile",
+		"Never Thought I'd See the Day"
 	],
 	"Hatcrab" : [
-		"HatCrabZombie"
+		"HatCrabZombie",
+		"Monokuma"
+	],
+	"Andy" : [
+		"Just Call Me Andy"
 	],
 	"Shio" : [
 		"beanboozler",
@@ -209,10 +277,14 @@
 		"Tito Lounge"
 	],
 	"Delta" : [
-		"ShittyAirline"
+		"ShittyAirline",
+		"Wow it's Him"
 	],
 	"AllisonWonderland" : [
 		"Girl 1"
+	],
+	"Hobs" : [
+		"Hobbs"
 	],
 	"Weshmek" : [
 		"WESHMECHA"
@@ -226,7 +298,8 @@
 		"CVWow"
 	],
 	"Root" : [
-		"Root'sFox"
+		"Root'sFox",
+		"L7 Root"
 	],
 	"G$" : [
 		"G-Money"
@@ -238,12 +311,16 @@
 	"IceBallz" : [
 		"IceBrawlz",
 		"BizzKidDoogie",
-		"BlueBallz"
+		"BlueBallz",
+		"Ice Toblerones"
 	],
-
+	"IceBallz's Secondaries" : [
+		"PSI Rockin"
+	],
 	"Trulliam" : [
 		"LP Trulliam",
-		"D.va is Bae"
+		"D.va is Bae",
+		"A Big Fish in a Small Pond"
 	],
 	"Moniker" : [
 		"Monikers"
@@ -269,7 +346,7 @@
 	"Cherries" : [
 		"How do you like dem Cherries?"
 	],
-	"HebeGeebe" : [
-		"HeBeGB"
+	"HeBeGB" : [
+		"HeebeGebe"
 	]
 }

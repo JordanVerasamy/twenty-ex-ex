@@ -14,10 +14,10 @@ CHALLONGE_API_KEY = config.CHALLONGE_API_KEY
 K_FACTOR = 10
 
 # The number of times the program repeats every tournament.
-ITERATIONS = 300
+ITERATIONS = 1
 
 # The number of times the program repeats the entire process
-SUPER_ITERATIONS = 250
+SUPER_ITERATIONS = 2
 
 # Any gap between player ratings that is higher than this threshold marks a new tier.
 TIER_THRESHOLD = 30
@@ -29,17 +29,29 @@ OUTPUT_FILE = 'elo'
 
 TOURNAMENT_URLS = [
 	'Crossroads9',
+	'Crossroads10',
+	'Crossroads11',
 
 	'uwsmashclub-UWmelee32',
+	'uwsmashclub-UWmelee33',
+	'uwsmashclub-UWmelee34',
+	'uwsmashclub-uwmelee35',
 
-	'letsplaykw-melee_may15_2016',
-	'letsplaykw-melee_may28_2016'
+	'letsplaykw-melee_may28_2016',
+	'letsplaykw-melee_june6_2016',
+	'letsplaykw-melee_june13_2016'
 ]
 
 NEW_TOURNAMENTS = [
-	'uwsmashclub-UWmelee33',
-	'uwsmashclub-UWmelee34',
-	'Crossroads10'
+	'Crossroads12',
+	'Crossroads13',
+
+	'uwsmashclub-UWmelee36',
+	'uwsmashclub-uwmelee37',
+
+	'letsplaykw-melee_june18_2016',
+	'letsplaykw-melee_june25_2016',
+	'letsplaykw-melee_july2_2016'
 ]
 
 with open('json/alt_tags.json', 'r') as data_file:
