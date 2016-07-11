@@ -99,14 +99,16 @@
 		"Red Eyes Black Dragon",
 		"Swords of Revealing Light",
 		"Chuffles' Metaknight",
-		"Dranzer"
+		"Dranzer",
+		"Richard Rider"
 	],
 	"Dragon" : [
 		"Where ya Been?"
 	],
 	"Adviceburg" : [
 		"Delayed Reactions",
-		"Free T-Shirts"
+		"Free T-Shirts",
+		"Do You Have A Name?"
 	],
 	"L3W" : [
 		"L3W!",
@@ -117,6 +119,9 @@
 	],
 	"Gragon" : [
 		"SamusGuy"
+	],
+	"KidoCosmic" : [
+		"KiddoCosmic"
 	],
 	"Gragon's Fox" : [
 		"A Shitty Fox"
@@ -141,7 +146,8 @@
 		"Wakeningg"
 	],
 	"Merik" : [
-		"Meric"
+		"Meric",
+		"Merick"
 	],
 	"Mosh" : [
 		"Marth/Fox Pro"
@@ -153,7 +159,8 @@
 		"Jason \"LetsDuet\" Young",
 		"Let'sUp-Cancel",
 		"MarioMaster420",
-		"What a Guy!"
+		"What a Guy!",
+		"Let's Duet"
 	],
 	"Phlo" : [
 		"Flow",
@@ -181,7 +188,8 @@
 	],
 	"Cyan" : [
 		"UnluckyFoxMain",
-		"Jose's Daddy"
+		"Jose's Daddy",
+		"truly unlucky brawl player"
 	],
 	"EWC" : [
 		"EWC's BBC's Planet Earth"
@@ -347,6 +355,7 @@
 		"How do you like dem Cherries?"
 	],
 	"HeBeGB" : [
-		"HeebeGebe"
+		"HeebeGebe",
+		"HebeGeebe"
 	]
 }

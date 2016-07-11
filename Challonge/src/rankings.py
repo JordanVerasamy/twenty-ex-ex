@@ -14,10 +14,10 @@ CHALLONGE_API_KEY = config.CHALLONGE_API_KEY
 K_FACTOR = 10
 
 # The number of times the program repeats every tournament.
-ITERATIONS = 1
+ITERATIONS = 350
 
 # The number of times the program repeats the entire process
-SUPER_ITERATIONS = 2
+SUPER_ITERATIONS = 180
 
 # Any gap between player ratings that is higher than this threshold marks a new tier.
 TIER_THRESHOLD = 30
@@ -28,30 +28,26 @@ STARTING_ELO = 1200
 OUTPUT_FILE = 'elo'
 
 TOURNAMENT_URLS = [
-	'Crossroads9',
 	'Crossroads10',
 	'Crossroads11',
-
-	'uwsmashclub-UWmelee32',
-	'uwsmashclub-UWmelee33',
-	'uwsmashclub-UWmelee34',
-	'uwsmashclub-uwmelee35',
-
-	'letsplaykw-melee_may28_2016',
-	'letsplaykw-melee_june6_2016',
-	'letsplaykw-melee_june13_2016'
-]
-
-NEW_TOURNAMENTS = [
 	'Crossroads12',
 	'Crossroads13',
 
-	'uwsmashclub-UWmelee36',
+	'uwsmashclub-uwmelee34',
+	'uwsmashclub-uwmelee35',
+	'uwsmashclub-uwmelee36',
 	'uwsmashclub-uwmelee37',
 
+	'letsplaykw-melee_june13_2016',
 	'letsplaykw-melee_june18_2016',
 	'letsplaykw-melee_june25_2016',
 	'letsplaykw-melee_july2_2016'
+]
+
+NEW_TOURNAMENTS = [
+	'Crossroads14',
+
+	'letsplaykw-melee_july9_2016'
 ]
 
 with open('json/alt_tags.json', 'r') as data_file:
@@ -288,8 +284,8 @@ def write_ratings_to_html(tts, ratings, movement, OUTPUT_FILE):
 
   		<p>Tournaments used:<br><br>""")
 
-		for tt in tts:
-			outfile.write('{}<br>\n'.format(tt.tournament_url))
+		for tt_url in sorted(map(lambda x: x.tournament_url, tts)):
+			outfile.write('{}<br>\n'.format(tt_url))
 
 		outfile.write("""</p>
 
