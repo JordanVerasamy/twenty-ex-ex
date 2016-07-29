@@ -7,10 +7,12 @@
 	"Jamrun" : [
 		"Drolyin's Bowser",
 		"Drolian's Bowser",
-		"Drolian's Johns"
+		"Drolian's Johns",
+		"Time"
 	],
 	"Jamrun's Secondaries" : [
-		"Drolian's Falco"
+		"Drolian's Falco",
+		"NugS96"
 	],
 	"Simba" : [
 		"CubSimba",
@@ -19,7 +21,9 @@
 	"OT Eric" : [
 		"BLT Eric",
 		"Dyslexic DISH",
-		"OD Falco"
+		"OD Falco",
+		"Jeef",
+		"LoneChufferFish"
 	],
 	"Gerb" : [
 		"Not the netplay marth instead the puff gerb",
@@ -45,7 +49,11 @@
 		"One Way Heroics Master",
 		"Random Gibberish",
 		"Trash",
-		"Something Garbage"
+		"Something Garbage",
+		"60 strength",
+		"Road to 62 Strength",
+		"Oh, I don't know",
+		"Return of Garbage Prince"
 	],
 	"Eidolon" : [
 		"Eidolm@ster"
@@ -58,14 +66,16 @@
 	],
 	"KrispySmooth" : [
 		"KrispyKreme",
-		"A Kind Stranger"
+		"A Kind Stranger",
+		"Krispywinter"
 	],
 	"G Pipes" : [
 		"Jee Pipes",
 		"G Debt",
 		"Yugi Boy",
 		"smokedatGPIPE",
-		"GSkrilla"
+		"GSkrilla",
+		"DayZ"
 	],
 	"Ryan Ford's Young Link" : [
 		"Drolian's B0wser"
@@ -105,10 +115,12 @@
 	"Dragon" : [
 		"Where ya Been?"
 	],
-	"Adviceburg" : [
+	"Adam S" : [
 		"Delayed Reactions",
 		"Free T-Shirts",
-		"Do You Have A Name?"
+		"Do You Have A Name?",
+		"Adviceburg",
+		"TooSlow"
 	],
 	"L3W" : [
 		"L3W!",
@@ -118,13 +130,11 @@
 		"Dethslayr"
 	],
 	"Gragon" : [
-		"SamusGuy"
+		"SamusGuy",
+		"A Shitty Fox"
 	],
 	"KidoCosmic" : [
 		"KiddoCosmic"
-	],
-	"Gragon's Fox" : [
-		"A Shitty Fox"
 	],
 	"Love's Secondaries" : [
 		"LoveDoctor"
@@ -179,7 +189,11 @@
 		"Tuxedo Mask",
 		"Tenseiga",
 		"Freeeedong",
-		"Rockman-sama"
+		"Rockman-sama",
+		"temari",
+		"Elite Four Agatha",
+		"Chaos Zakum",
+		"Eliwood"
 	],
 	"JusttheTipper" : [
 		"5-0'd by Eon",
@@ -189,7 +203,11 @@
 	"Cyan" : [
 		"UnluckyFoxMain",
 		"Jose's Daddy",
-		"truly unlucky brawl player"
+		"truly unlucky brawl player",
+		"unlocky memes",
+		"truly unlucky fox main",
+		"generic unlucky fox main",
+		"unlucky sheik main"
 	],
 	"EWC" : [
 		"EWC's BBC's Planet Earth"
@@ -218,6 +236,9 @@
 		"ICs/PuffPro955",
 		"Colouring Book"
 	],
+	"4serial" : [
+		"A link named slykbacc"
+	],
 	"DiscoWinter" : [
 		"Disco",
 		"CWK",
@@ -226,7 +247,8 @@
 		"SkoboCop",
 		"DiscoInferno",
 		"Cortex",
-		"Maury Povich"
+		"Maury Povich",
+		"Discosmooth"
 	],
 	"Drolian's Secondaries" : [
 		"LinkXBowserPro98",
@@ -259,6 +281,10 @@
 	"Life's Secondaries" : [
 		"Life's Marth"
 	],
+	"Life" : [
+		"Temion Mirun",
+		"Chaos Horntail"
+	],
 	"ADogInDust" : [
 		"ADog"
 	],
@@ -273,7 +299,11 @@
 		"Monokuma"
 	],
 	"Andy" : [
-		"Just Call Me Andy"
+		"Just Call Me Andy",
+		"dogem"
+	],
+	"IO" : [
+		"I/O"
 	],
 	"Shio" : [
 		"beanboozler",
@@ -300,7 +330,8 @@
 	"Yarfy" : [
 		"LedDshi",
 		"Drolian's Tap Jump",
-		"\"Cept maybe Kuriboh\""
+		"\"Cept maybe Kuriboh\"",
+		"Growing Pains"
 	],
 	"CVWAUW" : [
 		"CVWow"
@@ -323,7 +354,8 @@
 		"Ice Toblerones"
 	],
 	"IceBallz's Secondaries" : [
-		"PSI Rockin"
+		"PSI Rockin",
+		"AddyTheHead"
 	],
 	"Trulliam" : [
 		"LP Trulliam",
@@ -346,7 +378,9 @@
 		"charlie du",
 		"Charlie",
 		"Drolian's Chuffles",
-		"\"My grandpa's deck has no useless cards\""
+		"\"My grandpa's deck has no useless cards\"",
+		"Chuffers",
+		"CyberBully69"
 	],
 	"Steiner" : [
 		"Steiner; Gate"

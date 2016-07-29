@@ -17,10 +17,10 @@ K_FACTOR = 10
 ITERATIONS = 350
 
 # The number of times the program repeats the entire process
-SUPER_ITERATIONS = 180
+SUPER_ITERATIONS = 5
 
 # Any gap between player ratings that is higher than this threshold marks a new tier.
-TIER_THRESHOLD = 30
+TIER_THRESHOLD = 40
 
 # The elo that a new player starts at before their first game.
 STARTING_ELO = 1200
@@ -28,26 +28,26 @@ STARTING_ELO = 1200
 OUTPUT_FILE = 'elo'
 
 TOURNAMENT_URLS = [
-	'Crossroads10',
-	'Crossroads11',
-	'Crossroads12',
 	'Crossroads13',
+	'Crossroads14',
+	'Crossroads16',
 
-	'uwsmashclub-uwmelee34',
-	'uwsmashclub-uwmelee35',
-	'uwsmashclub-uwmelee36',
 	'uwsmashclub-uwmelee37',
+	'uwsmashclub-uwmelee38',
+	'uwsmashclub-uwmelee39',
 
-	'letsplaykw-melee_june13_2016',
-	'letsplaykw-melee_june18_2016',
 	'letsplaykw-melee_june25_2016',
-	'letsplaykw-melee_july2_2016'
+	'letsplaykw-melee_july2_2016',
+	'letsplaykw-melee_july9_2016'
 ]
 
 NEW_TOURNAMENTS = [
-	'Crossroads14',
+	'Crossroads17',
 
-	'letsplaykw-melee_july9_2016'
+	'uwsmashclub-uwmelee40',
+
+	'letsplaykw-melee_july23_2016'
+
 ]
 
 with open('json/alt_tags.json', 'r') as data_file:
@@ -142,7 +142,8 @@ def compute_single_ratings(tournament_trackers):
 
 			# Get a list of all matches from the tournament (we already pulled this from Challonge)
 			matches = tt.get_all_matches()
-			random.shuffle(matches)
+
+			#random.shuffle(matches)
 
 			for match in matches:
 
@@ -164,8 +165,8 @@ def compute_single_ratings(tournament_trackers):
 				ratings[winner] = get_updated_elo(winner_rating, loser_rating, score)
 				ratings[loser] = get_updated_elo(loser_rating, winner_rating,  1 - score)
 
-			# Every iteration after the first, go through tournaments in a random order
-			random.shuffle(tournament_trackers)
+		# Every iteration after the first, go through tournaments in a random order
+		random.shuffle(tournament_trackers)
 
 	return ratings
 
