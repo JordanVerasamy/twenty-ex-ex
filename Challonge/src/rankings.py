@@ -92,8 +92,8 @@ def get_real_tag(tag, tournament_url):
 			return SPECIAL_CASES[tournament_url][tag]
 
 	base_tag = tag[tag.find('|')+1:].lower().replace(' ', '')
-	base_tag = re.sub('\(\w*\)', '', base_tag)
-	base_tag = re.sub('\[\w*\]', '', base_tag)
+	base_tag = re.sub('\(\.*\)', '', base_tag)
+	base_tag = re.sub('\[\.*\]', '', base_tag)
 	for player in ALT_TAGS:
 		if base_tag == player.lower().replace(' ', ''):
 			return player
@@ -102,7 +102,7 @@ def get_real_tag(tag, tournament_url):
 	for player in names:
 		if base_tag == player.lower().replace(' ', ''):
 			return player
-	return re.sub('\(\w*\)', '', tag[tag.find('|')+1:].replace(' ', ''))
+	return re.sub('\[\.*\]', '', re.sub('\(\.*\)', '', tag[tag.find('|')+1:].replace(' ', '')))
 
 ### ------------------------------------------- ###
 
