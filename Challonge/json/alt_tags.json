@@ -23,7 +23,8 @@
 		"Dyslexic DISH",
 		"OD Falco",
 		"Jeef",
-		"LoneChufferFish"
+		"LoneChufferFish",
+		"Darkfall"
 	],
 	"Gerb" : [
 		"Not the netplay marth instead the puff gerb",
@@ -53,7 +54,9 @@
 		"60 strength",
 		"Road to 62 Strength",
 		"Oh, I don't know",
-		"Return of Garbage Prince"
+		"Return of Garbage Prince",
+		"Road to 59 Magic",
+		"Runescapemaster"
 	],
 	"Eidolon" : [
 		"Eidolm@ster"
@@ -120,7 +123,8 @@
 		"Free T-Shirts",
 		"Do You Have A Name?",
 		"Adviceburg",
-		"TooSlow"
+		"TooSlow",
+		"A Great Disappointment"
 	],
 	"L3W" : [
 		"L3W!",
@@ -170,7 +174,8 @@
 		"Let'sUp-Cancel",
 		"MarioMaster420",
 		"What a Guy!",
-		"Let's Duet"
+		"Let's Duet",
+		"MarioMaster420 Birthday Boy"
 	],
 	"Phlo" : [
 		"Flow",
@@ -199,6 +204,9 @@
 		"5-0'd by Eon",
 		"Mr.Fuji",
 		"Kobe Bryant"
+	],
+	"Byron" : [
+		"The BYRON!"
 	],
 	"Cyan" : [
 		"UnluckyFoxMain",
@@ -301,10 +309,14 @@
 	],
 	"Andy" : [
 		"Just Call Me Andy",
-		"dogem"
+		"dogem",
+		"upthrow-dair"
 	],
 	"IO" : [
 		"I/O"
+	],
+	"Xayonara" : [
+		"Xayanora"
 	],
 	"Shio" : [
 		"beanboozler",
