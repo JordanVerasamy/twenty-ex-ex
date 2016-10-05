@@ -14,10 +14,10 @@ CHALLONGE_API_KEY = config.CHALLONGE_API_KEY
 K_FACTOR = 10
 
 # The number of times the program repeats every tournament.
-ITERATIONS = 350
+ITERATIONS = 400
 
 # The number of times the program repeats the entire process
-SUPER_ITERATIONS = 5
+SUPER_ITERATIONS = 60
 
 # Any gap between player ratings that is higher than this threshold marks a new tier.
 TIER_THRESHOLD = 40
@@ -28,26 +28,20 @@ STARTING_ELO = 1200
 OUTPUT_FILE = 'elo'
 
 TOURNAMENT_URLS = [
-	'Crossroads13',
-	'Crossroads14',
-	'Crossroads16',
+	'Crossroads21',
+    'Crossroads23',
+    'Crossroads24',
 
-	'uwsmashclub-uwmelee37',
-	'uwsmashclub-uwmelee38',
-	'uwsmashclub-uwmelee39',
+    'uwsmashclub-uwmelee41',
 
-	'letsplaykw-melee_june25_2016',
-	'letsplaykw-melee_july2_2016',
-	'letsplaykw-melee_july9_2016'
+    'letsplaykw-melee_sep3_2016',
+    'letsplaykw-melee_sep10_2016',
+    'letsplaykw-melee_sep17_2016'
 ]
 
 NEW_TOURNAMENTS = [
-	'Crossroads17',
-
-	'uwsmashclub-uwmelee40',
-
-	'letsplaykw-melee_july23_2016'
-
+    'Crossroads25',
+    'uwsmashclub-uwmelee42',
 ]
 
 with open('json/alt_tags.json', 'r') as data_file:
@@ -92,8 +86,8 @@ def get_real_tag(tag, tournament_url):
 			return SPECIAL_CASES[tournament_url][tag]
 
 	base_tag = tag[tag.find('|')+1:].lower().replace(' ', '')
-	base_tag = re.sub('\(\.*\)', '', base_tag)
-	base_tag = re.sub('\[\.*\]', '', base_tag)
+	base_tag = re.sub('\(.*\)', '', base_tag)
+	base_tag = re.sub('\[.*\]', '', base_tag)
 	for player in ALT_TAGS:
 		if base_tag == player.lower().replace(' ', ''):
 			return player
@@ -102,7 +96,7 @@ def get_real_tag(tag, tournament_url):
 	for player in names:
 		if base_tag == player.lower().replace(' ', ''):
 			return player
-	return re.sub('\[\.*\]', '', re.sub('\(\.*\)', '', tag[tag.find('|')+1:].replace(' ', '')))
+	return re.sub('\[.*\]', '', re.sub('\(.*\)', '', tag[tag.find('|')+1:].replace(' ', '')))
 
 ### ------------------------------------------- ###
 

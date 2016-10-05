@@ -1,0 +1,146 @@
+Tournaments used:
+Crossroads23
+uwsmashclub-uwmelee41
+letsplaykw-melee_sep3_2016
+letsplaykw-melee_sep10_2016
+letsplaykw-melee_sep17_2016
+Crossroads21
+Crossroads24
+Crossroads25
+uwsmashclub-uwmelee42
+
+  1:  2259       Rabbit
+  2:  2228       Byron
+---
+  3:  2180       GarbagePrince
+---
+  4:  2127  ++   Delta
+  5:  2110       DrShotz
+  6:  2104       Koobie
+---
+  7:  2045       The Engineer
+  8:  2029  --   Karma
+---
+  9:  1960       DeltaFox
+ 10:  1926   +   Keatsta
+ 11:  1922       OT Eric
+---
+ 12:  1833       Simba
+ 13:  1801   +   Adam S
+ 14:  1778   +   Ursi
+ 15:  1772   -   Crimson
+ 16:  1770  +++  MurphyPrime
+ 17:  1756   -   Gragon
+ 18:  1733       IR
+ 19:  1719       Youngster Joey
+ 20:  1705  --   BlackGun
+ 21:  1702       mochi
+ 22:  1681       Alex
+ 23:  1664  ++   IceBallz
+ 24:  1661  ++   Eon
+ 25:  1634   +   Eidolon
+ 26:  1632  NEW  Love
+ 27:  1630   -   Luckerdog
+ 28:  1629   -   Meo
+ 29:  1624   -   Pokno
+ 30:  1622   -   Juice
+ 31:  1600  ++   Root
+---
+ 32:  1543  NEW  Wally
+ 33:  1542       LetsDuet
+ 34:  1539  NEW  Tent
+ 35:  1529       PretendoLamecube
+---
+ 36:  1484  NEW  Loku
+ 37:  1477       Life's Secondaries
+ 38:  1471       A Faceless Fox
+ 39:  1468       Tel
+---
+ 40:  1423   +   L3W
+ 41:  1409   +   Dak
+ 42:  1395  ++   HK
+ 43:  1390   +   TAS
+ 44:  1389  ++   Phlo
+ 45:  1383  NEW  Sora
+ 46:  1381       Sham
+ 47:  1378   +   Bahlakay
+ 48:  1370       AriesNova
+ 49:  1366  ---  Goro
+ 50:  1363  ---  JoeySweatpants
+ 51:  1360       You
+ 52:  1348   +   Shook
+---
+ 53:  1285       Yimpy
+ 54:  1247       Papay
+ 55:  1240  --   Pufftoss
+ 56:  1220   +   TLP
+ 57:  1220       Subtlety
+ 58:  1193  NEW  Gerb
+ 59:  1188   +   Wowser
+ 60:  1178   -   UMR
+ 61:  1174  NEW  Blaze
+ 62:  1173  NEW  Element
+ 63:  1170  NEW  Seaco
+ 64:  1151       74
+ 65:  1130   +   Pai
+ 66:  1117       Noobletz
+ 67:  1113       Aaron
+ 68:  1110  +++  Dunker
+ 69:  1092   -   Love's Secondaries
+ 70:  1089       Seen
+ 71:  1071       Echo
+ 72:  1038       MZRK
+ 73:  1037       Amiracle
+ 74:  1034  --   Firestorm
+ 75:  1025  NEW  Quasimoto
+---
+ 76:   971       Cecil
+ 77:   962  NEW  Kel
+---
+ 78:   920       Smoyd
+ 79:   907   -   skypilot257
+ 80:   902       Hatcrab
+ 81:   887  NEW  Skub
+---
+ 82:   822   +   SnoStorm
+ 83:   821  NEW  A
+ 84:   805  NEW  MZ
+ 85:   802       MILK
+ 86:   800  NEW  1111
+ 87:   796   +   KG
+ 88:   791   +   MJ
+ 89:   777  ---  Numb
+ 90:   774  +++  Wumbo
+ 91:   763   +   HotPocket
+ 92:   747  NEW  Nowonukno
+ 93:   746       YoshiGuy
+ 94:   741  NEW  JediKnight
+ 95:   739       Ratdawg
+ 96:   729  NEW  VGAAddict
+ 97:   719       Locus
+ 98:   712   +   mikeyatb
+ 99:   705   -   TheBrewery
+100:   695       Rewind
+101:   670   +   CCO
+102:   650   -   Cheesecaked
+103:   634   +   Lunar
+104:   633  ---  KidoCosmic
+105:   599       BlueBrew
+106:   574       Tanzy
+107:   573  +++  Bye
+108:   563  --   Endr
+109:   540       gigs
+110:   537  NEW  Goose
+111:   533       Kido
+112:   533   -   Divide
+113:   510       Ryan
+114:   495  NEW  RatDog
+115:   492       POMF
+---
+116:   447       Delore
+---
+117:   394  NEW  Eric
+---
+118:   332  NEW  S&S
+---
+119:   239       Aues
